@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  # Run this workflow when commits are pushed to the protected `main` branch.
+  push:
+    branches: [ main ]
+
+concurrency:
+  # Ensure only one run per branch/workflow group is active at a time.
+  # If a new push arrives while the previous run is still running, the previous
+  # run will be cancelled. The group name uses the workflow and ref so that
+  # concurrency is scoped per-branch.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build, Lint and Package
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Cache npm and node_modules
+        # Cache node modules and the npm cache to speed up repeated runs. The
+        # cache key includes hashes of `package-lock.json` and `package.json` so
+        # the cache is invalidated automatically when dependencies change.
+        # Caching `node_modules` is useful for projects that don't use a lockfile
+        # or when the package manager does not restore the cache exactly the
+        # same way each run. We also cache `~/.npm` which stores downloaded
+        # package tarballs.
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          # Key includes both lockfile and package.json so cache updates when deps change
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Cache Next.js build cache
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: ${{ runner.os }}-next-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-next-
+
+      - name: Install dependencies
+        # Use npm ci when a lockfile is present, otherwise fall back to npm install
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Lint (treat as test)
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Create distribution (.dist) archive
+        # Collect build outputs (and essential files) into a single .dist tarball.
+        # --ignore-failed-read ensures missing optional files won't break the step.
+        run: |
+          tar -czf project.dist --ignore-failed-read .next public package.json next.config.ts next-env.d.ts app
+
+      - name: Upload distribution artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: project-dist
+          path: project.dist
