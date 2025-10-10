@@ -74,8 +74,18 @@ jobs:
         run: |
           tar -czf project.dist --ignore-failed-read .next public package.json next.config.ts next-env.d.ts app
 
-      - name: Upload distribution artifact
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: project-dist
-          path: project.dist
+          name: project-qol-frontend-build-artifact
+          path: |
+            .next
+            public
+            app
+            components
+            hooks
+            libs
+            package.json
+            next.config.ts
+            next-env.d.ts
+            
