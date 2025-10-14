@@ -3,12 +3,13 @@ import { PageContainer, PageContentHeader } from "@/components/reusables/contain
 import { dummyTableData } from "@/dummy";
 
 interface EventAttendeesPageProps {
-    params : { eventId: string }
+    params : Promise<{ eventId: string }>
 }
 const EventAttendeesPage : React.FC<EventAttendeesPageProps> = async ({
     params,
 }) => {
-    const eventId = (await params).eventId;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { eventId } = await params;
 
     return (
         <PageContainer>  
