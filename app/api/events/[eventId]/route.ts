@@ -7,10 +7,10 @@ import { getEventById } from '@/lib/queries/events'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { eventId: string } }
+  { params }: { params: Promise<{ eventId: string }> }
 ) {
   try {
-    const eventId = params.eventId
+    const { eventId } = await params
 
     const event = await getEventById(eventId)
 
