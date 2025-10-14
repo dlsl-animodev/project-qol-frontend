@@ -19,9 +19,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (!code) {
-      // existing presence-check handling
-    }
+    // if (!code) {
+    //   // existing presence-check handling
+    // }
+    
     if (!code) {
       return NextResponse.json(
         {
