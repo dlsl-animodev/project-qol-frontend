@@ -70,6 +70,10 @@ jobs:
       - name: Build
         run: npm run build
 
+        env: # Pass environment variables to the build script
+            NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+            STUDENT_API_URL: ${{ secrets.STUDENT_API_URL }}
+          
       - name: Ensure zip is available
         # On some runner images `zip` may not be installed by default. Install
         # it to ensure the packaging step works reliably.
