@@ -1,0 +1,204 @@
+backend architecture - server actions, api routes, and dal
+
+================================================================================
+
+data access layer (dal)
+
+located in lib/queries/ and contains reusable functions for interacting with supabase. components never call the dal directly, and only server actions, api routes, and server components can access dal.
+
+location: lib/queries/events.ts, lib/queries/attendance.ts
+
+================================================================================
+
+sample overview of the flow
+
+client components -> server actions (mutations) -> dal -> database
+client components -> api routes (reads) -> dal -> database
+server components -> dal -> database (direct access ok)
+
+================================================================================
+
+server actions (for mutations)
+
+use server actions when you need to create, update, or delete data from a client component.
+
+location: app/actions/events.ts, app/actions/attendance.ts
+
+available functions:
+- createEventWithCode() - creates event with auto-generated code
+- updateEvent() - updates event details
+- deleteEvent() - deletes event
+- recordAttendance() - logs student attendance
+
+example usage:
+
+import { createEventWithCode } from '@/app/actions/events'
+
+async function handleSubmit() {
+  const result = await createEventWithCode({
+    event_name: 'tech talk 2024',
+    event_date: '2024-12-01T10:00:00Z',
+    description: 'annual tech talk'
+  })
+
+  if (result.success) {
+    console.log('event created:', result.event)
+    console.log('code generated:', result.code.code)
+  }
+}
+
+what you get back:
+{
+  success: true,
+  event: { id: '...', event_name: 'tech talk 2024', event_code: 'AB12CD34', ... },
+  code: { code: 'AB12CD34', is_active: true, ... }
+}
+
+================================================================================
+
+api routes (for reads)
+
+use api routes when you need to read or list data from a client component.
+
+location: app/api/events/route.ts, app/api/validate-code/route.ts
+
+available endpoints:
+- GET /api/events - get all events
+- GET /api/events?code=ABC123 - get specific event by code
+- GET /api/events/[eventId]/attendance - get attendance list for event
+- POST /api/validate-code - validate if code is active (uses POST for security)
+
+note on validate-code: uses POST instead of GET to keep event codes out of url parameters and browser logs. codes act as access tokens so they're sent in request body for security, even though this is technically a read operation.
+
+example usage:
+
+async function loadEvents() {
+  const response = await fetch('/api/events')
+  const data = await response.json()
+
+  if (data.success) {
+    console.log('events:', data.events)
+    console.log('total:', data.count)
+  }
+}
+
+what you get back:
+{
+  success: true,
+  events: [
+    { id: '...', event_name: 'tech talk', event_code: 'AB12CD34', ... },
+    { id: '...', event_name: 'workshop', event_code: 'EF56GH78', ... }
+  ],
+  count: 2
+}
+
+================================================================================
+
+example: validate code
+
+async function validateCode(code) {
+  const response = await fetch('/api/validate-code', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code: code.toUpperCase() })
+  })
+
+  const result = await response.json()
+
+  if (result.valid) {
+    console.log('valid event:', result.event.event_name)
+  } else {
+    console.log('invalid:', result.reason)
+  }
+}
+
+what you get back:
+{
+  success: true,
+  valid: true,
+  event: { id: '...', event_name: 'tech talk', ... },
+  code: { code: 'AB12CD34', is_active: true, expires_at: '...' }
+}
+
+================================================================================
+
+example: record attendance
+
+import { recordAttendance } from '@/app/actions/attendance'
+
+async function logAttendance(studentId, code) {
+  const result = await recordAttendance(studentId, code)
+
+  if (result.success) {
+    console.log('attendance logged for:', result.studentInfo.email_address)
+  } else {
+    console.log('error:', result.error)
+  }
+}
+
+what you get back:
+{
+  success: true,
+  attendance: {
+    id: '...',
+    event_id: '...',
+    student_id: 'CARD123',
+    student_email: 'student@dlsu.edu.ph',
+    logged_at: '2024-12-01T10:30:00Z'
+  },
+  studentInfo: {
+    email_address: 'student@dlsu.edu.ph',
+    department: 'ccs',
+    card_tag_uid: 'CARD123'
+  }
+}
+
+================================================================================
+
+so,,,
+
+mutations (create/update/delete):
+- use server actions
+- import and call directly from client components
+- example: await createEventWithCode({...})
+
+reads (get/list):
+- use api routes
+- call with fetch() from client components
+- example: await fetch('/api/events')
+
+don't:
+- client component -> lib/queries/ (will error)
+
+do:
+- client component -> server action -> dal -> database
+- client component -> api route -> dal -> database
+
+================================================================================
+
+environment variables needed
+
+add to .env.local:
+
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+STUDENT_API_URL=https://project-qol-backend.onrender.com
+
+restart dev server after adding: npm run dev
+
+================================================================================
+
+response format
+
+all responses follow this pattern:
+
+success: { success: true, event?, code?, attendance?, events?, count? }
+error: { success: false, error: "message" }
+
+================================================================================
+
+verify in supabase:
+check events table, codes table, attendance table
+
+================================================================================
