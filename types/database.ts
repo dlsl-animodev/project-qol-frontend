@@ -27,9 +27,8 @@ export interface Attendance {
 }
 
 export interface AttendanceWithEvent extends Attendance {
-  events: Event
+  event: Event
 }
-
 export interface StudentInfo {
   email_address: string
   department: string

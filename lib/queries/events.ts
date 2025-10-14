@@ -3,6 +3,8 @@
 import { supabase } from '@/lib/supabase/server'
 import type { Event, Code } from '@/types/database'
 
+const SUPABASE_NO_ROWS_ERROR = 'PGRST116'
+
 export async function getEventByCode(eventCode: string): Promise<Event | null> {
   const { data, error } = await supabase
     .from('events')
@@ -11,7 +13,7 @@ export async function getEventByCode(eventCode: string): Promise<Event | null> {
     .single()
 
   if (error) {
-    if (error.code === 'PGRST116') return null
+    if (error.code === SUPABASE_NO_ROWS_ERROR) return null
     console.error('Error fetching event:', error)
     return null
   }
@@ -27,7 +29,7 @@ export async function getEventById(eventId: string): Promise<Event | null> {
     .single()
 
   if (error) {
-    if (error.code === 'PGRST116') return null
+    if (error.code === SUPABASE_NO_ROWS_ERROR) return null
     console.error('Error fetching event:', error)
     return null
   }
@@ -72,7 +74,7 @@ export async function getCodeByEventId(eventId: string): Promise<Code | null> {
     .single()
 
   if (error) {
-    if (error.code === 'PGRST116') return null
+    if (error.code === SUPABASE_NO_ROWS_ERROR) return null
     console.error('Error fetching code:', error)
     return null
   }

@@ -10,11 +10,11 @@ function generateCode(): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
   let code = ''
   for (let i = 0; i < 8; i++) {
-    code += chars.charAt(Math.floor(Math.random() * chars.length))
+    const randomIndex = crypto.getRandomValues(new Uint32Array(1))[0] % chars.length
+    code += chars.charAt(randomIndex)
   }
   return code
 }
-
 export async function createEventWithCode(eventData: {
   event_name: string
   event_date: string
@@ -40,7 +40,7 @@ export async function createEventWithCode(eventData: {
         .single()
 
       if (!existingCode)  {
-      break;
+        break
     }
       code = generateCode()
       attempts++
@@ -86,13 +86,19 @@ export async function createEventWithCode(eventData: {
     if (codeError || !codeData) {
       console.error('Error creating code:', codeError)
 
-      await supabase.from('events').delete().eq('id', event.id)
+      const { error: deleteError } = await supabase
+        .from('events')
+        .delete()
+        .eq('id', event.id)
+      if (deleteError) {
+        console.error('Failed to rollback event creation:', deleteError)
+      }
+
       return {
         success: false,
         error: codeError?.message || 'Failed to create code'
       }
     }
-
     revalidatePath('/admin')
     revalidatePath('/home')
 
