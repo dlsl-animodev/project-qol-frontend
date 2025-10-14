@@ -61,7 +61,12 @@ export async function getAttendanceCount(eventId: string): Promise<number> {
   return count || 0
 }
 
-export async function getStudentAttendance(studentId: string): Promise<AttendanceWithEvent[]> {
+// lib/queries/attendance.ts
+
+export async function getStudentAttendance(
+  studentId: string,
+  limit: number = 50
+): Promise<AttendanceWithEvent[]> {
   const { data, error } = await supabase
     .from('attendance')
     .select(`
@@ -70,6 +75,7 @@ export async function getStudentAttendance(studentId: string): Promise<Attendanc
     `)
     .eq('student_id', studentId)
     .order('tapped_at', { ascending: false })
+    .limit(limit)
 
   if (error) {
     console.error('Error fetching student attendance:', error)

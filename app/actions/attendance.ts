@@ -52,6 +52,8 @@ export async function recordAttendance(
 
     const studentName = formatStudentName(studentInfo.email_address)
 
+    // auth checks are yet to be determined...
+
     const { data: attendance, error: attendanceError } = await supabase
       .from('attendance')
       .insert({
