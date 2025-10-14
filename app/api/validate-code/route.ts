@@ -9,6 +9,19 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { code } = body
 
+    if (typeof code !== 'string' || code.trim().length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Invalid code format: code must be a non-empty string'
+        },
+        { status: 400 }
+      )
+    }
+
+    if (!code) {
+      // existing presence-check handling
+    }
     if (!code) {
       return NextResponse.json(
         {
