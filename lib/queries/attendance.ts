@@ -1,6 +1,6 @@
 // queries for attendance-related operations
 
-import { createSupabaseServerClient, Supabase } from '@/lib/supabase/server'
+import { Supabase } from '@/lib/supabase/server'
 import type { Attendance, AttendanceWithEvent } from '@/types/database'
 
 
