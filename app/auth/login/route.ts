@@ -15,6 +15,8 @@ export async function GET(request: NextRequest) {
 
   const callbackUrl = `${url.origin}/auth/callback?redirectTo=${encodeURIComponent(redirectParam)}`
 
+  console.log('Callback URL:', callbackUrl);
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
@@ -27,11 +29,14 @@ export async function GET(request: NextRequest) {
   })
 
   if (error || !data?.url) {
+    console.error('Error during sign-in:', error)
     const back = new URL('/sign-in', url.origin)
     back.searchParams.set('error', 'Failed to start Google sign-in.')
     back.searchParams.set('redirectTo', redirectParam)
     return NextResponse.redirect(back)
   }
 
+
+  console.log('Redirecting to:', data.url);
   return NextResponse.redirect(data.url)
 }
