@@ -1,11 +1,20 @@
 // query functions for events
 
-import { supabase } from '@/lib/supabase/server'
+import type { SupabaseClient } from '@supabase/supabase-js'
+import { createSupabaseServerClient } from '@/lib/supabase/server'
 import type { Event, Code } from '@/types/database'
 
 const SUPABASE_NO_ROWS_ERROR = 'PGRST116'
 
-export async function getEventByCode(eventCode: string): Promise<Event | null> {
+type Supabase = SupabaseClient<any, 'public', any>
+
+async function resolveClient(client?: Supabase): Promise<Supabase> {
+  if (client) return client
+  return createSupabaseServerClient()
+}
+
+export async function getEventByCode(eventCode: string, client?: Supabase): Promise<Event | null> {
+  const supabase = await resolveClient(client)
   const { data, error } = await supabase
     .from('events')
     .select('*')
@@ -21,7 +30,8 @@ export async function getEventByCode(eventCode: string): Promise<Event | null> {
   return data as Event
 }
 
-export async function getEventById(eventId: string): Promise<Event | null> {
+export async function getEventById(eventId: string, client?: Supabase): Promise<Event | null> {
+  const supabase = await resolveClient(client)
   const { data, error } = await supabase
     .from('events')
     .select('*')
@@ -37,7 +47,8 @@ export async function getEventById(eventId: string): Promise<Event | null> {
   return data as Event
 }
 
-export async function getAllEvents(): Promise<Event[]> {
+export async function getAllEvents(client?: Supabase): Promise<Event[]> {
+  const supabase = await resolveClient(client)
   const { data, error } = await supabase
     .from('events')
     .select('*')
@@ -51,7 +62,8 @@ export async function getAllEvents(): Promise<Event[]> {
   return data as Event[]
 }
 
-export async function getUpcomingEvents(): Promise<Event[]> {
+export async function getUpcomingEvents(client?: Supabase): Promise<Event[]> {
+  const supabase = await resolveClient(client)
   const { data, error } = await supabase
     .from('events')
     .select('*')
@@ -66,7 +78,8 @@ export async function getUpcomingEvents(): Promise<Event[]> {
   return data as Event[]
 }
 
-export async function getCodeByEventId(eventId: string): Promise<Code | null> {
+export async function getCodeByEventId(eventId: string, client?: Supabase): Promise<Code | null> {
+  const supabase = await resolveClient(client)
   const { data, error } = await supabase
     .from('codes')
     .select('*')
@@ -82,13 +95,13 @@ export async function getCodeByEventId(eventId: string): Promise<Code | null> {
   return data as Code
 }
 
-export async function validateCodeAndGetEvent(code: string): Promise<{
+export async function validateCodeAndGetEvent(code: string, client?: Supabase): Promise<{
   valid: boolean
   event?: Event
   code?: Code
   reason?: string
 }> {
-
+  const supabase = await resolveClient(client)
   const { data: codeData, error: codeError } = await supabase
     .from('codes')
     .select('*')
@@ -121,7 +134,7 @@ export async function validateCodeAndGetEvent(code: string): Promise<{
     }
   }
 
-  const event = await getEventById(codeData.event_id)
+  const event = await getEventById(codeData.event_id, supabase)
 
   if (!event) {
     return {

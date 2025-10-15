@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
+import { getCurrentUser } from "@/lib/supabase/auth";
+import { signOut } from "@/app/actions/auth";
 
-const Header = () => {
+const Header = async () => {
+    const user = await getCurrentUser();
+
     return (
         <header
             className="
@@ -33,8 +37,23 @@ const Header = () => {
             </section>
 
             {/* Right Section */}
-            <section className="flex justify-end">
-                <Button>Login</Button>
+            <section className="flex justify-end items-center gap-4">
+                {user ? (
+                    <>
+                        <span className="text-xs uppercase tracking-wide">
+                            Signed in as {user.email ?? "Account"}
+                        </span>
+                        <form action={signOut}>
+                            <Button type="submit" variant="secondary">
+                                Sign Out
+                            </Button>
+                        </form>
+                    </>
+                ) : (
+                    <Button asChild>
+                        <Link href="/sign-in">Sign In</Link>
+                    </Button>
+                )}
             </section>
         </header>
     );
