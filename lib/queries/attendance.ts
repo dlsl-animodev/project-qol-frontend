@@ -1,19 +1,11 @@
 // queries for attendance-related operations
 
-import type { SupabaseClient } from '@supabase/supabase-js'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { createSupabaseServerClient, Supabase } from '@/lib/supabase/server'
 import type { Attendance, AttendanceWithEvent } from '@/types/database'
 
-type Supabase = SupabaseClient<any, 'public', any>
 
-async function resolveClient(client?: Supabase): Promise<Supabase> {
-  if (client) return client
-  return createSupabaseServerClient()
-}
-
-export async function getEventAttendance(eventId: string, client?: Supabase): Promise<Attendance[]> {
-  const supabase = await resolveClient(client)
-  const { data, error } = await supabase
+export async function getEventAttendance(eventId: string, client: Supabase): Promise<Attendance[]> {
+  const { data, error } = await client
     .from('attendance')
     .select('*')
     .eq('event_id', eventId)
@@ -27,9 +19,8 @@ export async function getEventAttendance(eventId: string, client?: Supabase): Pr
   return data as Attendance[]
 }
 
-export async function hasAttended(eventId: string, studentId: string, client?: Supabase): Promise<boolean> {
-  const supabase = await resolveClient(client)
-  const { data, error } = await supabase
+export async function hasAttended(eventId: string, studentId: string, client: Supabase): Promise<boolean> {
+  const { data, error } = await client
     .from('attendance')
     .select('id')
     .eq('event_id', eventId)
@@ -39,9 +30,8 @@ export async function hasAttended(eventId: string, studentId: string, client?: S
   return !error && data !== null
 }
 
-export async function getRecentAttendance(limit: number = 10, client?: Supabase): Promise<AttendanceWithEvent[]> {
-  const supabase = await resolveClient(client)
-  const { data, error } = await supabase
+export async function getRecentAttendance(limit: number = 10, client: Supabase): Promise<AttendanceWithEvent[]> {
+  const { data, error } = await client
     .from('attendance')
     .select(`
       *,
@@ -58,9 +48,8 @@ export async function getRecentAttendance(limit: number = 10, client?: Supabase)
   return data as AttendanceWithEvent[]
 }
 
-export async function getAttendanceCount(eventId: string, client?: Supabase): Promise<number> {
-  const supabase = await resolveClient(client)
-  const { count, error } = await supabase
+export async function getAttendanceCount(eventId: string, client: Supabase): Promise<number> {
+  const { count, error } = await client
     .from('attendance')
     .select('*', { count: 'exact', head: true })
     .eq('event_id', eventId)
@@ -78,10 +67,9 @@ export async function getAttendanceCount(eventId: string, client?: Supabase): Pr
 export async function getStudentAttendance(
   studentId: string,
   limit: number = 50,
-  client?: Supabase
+  client: Supabase
 ): Promise<AttendanceWithEvent[]> {
-  const supabase = await resolveClient(client)
-  const { data, error } = await supabase
+  const { data, error } = await client
     .from('attendance')
     .select(`
       *,

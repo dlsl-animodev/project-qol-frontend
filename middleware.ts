@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { updateSession } from './lib/supabase/middleware'
+import { UserAppMetadata, UserMetadata } from '@supabase/supabase-js'
 
 const PROTECTED_MATCHERS = ['/home', '/admin', '/events', '/attendees']
 const ADMIN_MATCHERS = ['/admin', '/events', '/attendees']
@@ -19,7 +20,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  const response = NextResponse.next()
   const supabase = await createSupabaseServerClient()
   const {
     data: { session }
@@ -39,8 +39,8 @@ export async function middleware(request: NextRequest) {
     } = await supabase.auth.getUser()
 
     const isAdmin = (() => {
-      const appMeta: any = user?.app_metadata || {}
-      const userMeta: any = user?.user_metadata || {}
+      const appMeta: UserAppMetadata = user?.app_metadata || {}
+      const userMeta: UserMetadata = user?.user_metadata || {}
       const roleCandidates: unknown[] = [
         appMeta.role,
         appMeta.roles,

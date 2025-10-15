@@ -1,7 +1,13 @@
 import { cookies } from 'next/headers'
-import type { NextRequest, NextResponse } from 'next/server'
 import { createBrowserClient, createServerClient } from '@supabase/ssr'
-import type { CookieOptions } from '@supabase/ssr'
+import { SupabaseClient } from '@supabase/supabase-js'
+
+// we want to use supabase in the future to generate types from our database
+type Database = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any
+}
+export type Supabase = SupabaseClient<Database>
 
 function getEnvVar(key: string): string {
   const value = process.env[key]
@@ -22,9 +28,6 @@ export function createClient() {
     supabaseAnonKey,
   )
 }
-
-// Deprecated: use createSupabaseServerClient() directly for all server contexts
-// Note: Route/middleware-specific helpers removed; use createSupabaseServerClient() directly.
 
 
 

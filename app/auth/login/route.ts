@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
   const url = new URL(request.url)
   const redirectParam = sanitizeRedirect(url.searchParams.get('redirectTo'))
 
-  let callbackUrl = `${url.origin}/auth/callback?redirectTo=${encodeURIComponent(redirectParam)}`
+  const callbackUrl = `${url.origin}/auth/callback?redirectTo=${encodeURIComponent(redirectParam)}`
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
