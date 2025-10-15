@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr'
+import { UserAppMetadata, UserMetadata } from '@supabase/supabase-js'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
@@ -59,8 +60,8 @@ export async function updateSession(request: NextRequest) {
 
     const isAdmin = (() => {
       // Look across common places teams store roles
-      const appMeta: any = supaUser?.app_metadata || {}
-      const userMeta: any = supaUser?.user_metadata || {}
+      const appMeta: UserAppMetadata = supaUser?.app_metadata || {}
+      const userMeta: UserMetadata = supaUser?.user_metadata || {}
       const candidates: unknown[] = [
         appMeta.role,
         appMeta.roles,
