@@ -15,7 +15,7 @@ import EventCard from "./event-card";
 
 const EventsServer = async () => {
     // Simulate an await for fetching data
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     return (
         <CardContainer>
