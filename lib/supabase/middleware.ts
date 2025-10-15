@@ -47,6 +47,52 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  // Guard admin-only routes by checking the authenticated user's role metadata
+  // Note: Do this AFTER getClaims() to avoid session/cookie desync issues.
+  const pathname = request.nextUrl.pathname
+  const isAdminPath = pathname === '/admin' || pathname.startsWith('/admin/')
+
+  if (user && isAdminPath) {
+    // Only fetch the full user object when necessary (for admin routes)
+    const { data: userData } = await supabase.auth.getUser()
+    const supaUser = userData?.user
+
+    const isAdmin = (() => {
+      // Look across common places teams store roles
+      const appMeta: any = supaUser?.app_metadata || {}
+      const userMeta: any = supaUser?.user_metadata || {}
+      const candidates: unknown[] = [
+        appMeta.role,
+        appMeta.roles,
+        userMeta.role,
+        userMeta.roles,
+        userMeta.is_admin,
+      ].filter((v) => v !== undefined && v !== null)
+
+      return candidates.some((v) => {
+        if (typeof v === 'string') return v.toLowerCase() === 'admin'
+        if (Array.isArray(v)) return v.map(String).map((s) => s.toLowerCase()).includes('admin')
+        if (typeof v === 'boolean') return v === true
+        return false
+      })
+    })()
+
+    if (!isAdmin) {
+      // Logged-in but not an admin: redirect to a safe page, preserve cookies
+      const url = request.nextUrl.clone()
+      url.pathname = '/home'
+      // Optional: include a hint in the query string
+      url.searchParams.set('error', 'forbidden')
+
+      const redirectResponse = NextResponse.redirect(url)
+      // Preserve Supabase cookies to avoid logging the user out
+      supabaseResponse.cookies.getAll().forEach((c) => {
+        redirectResponse.cookies.set(c)
+      })
+      return redirectResponse
+    }
+  }
+
   // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
   // creating a new response object with NextResponse.next() make sure to:
   // 1. Pass the request in it, like so:
