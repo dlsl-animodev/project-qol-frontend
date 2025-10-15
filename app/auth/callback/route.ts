@@ -2,31 +2,26 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 
 export async function GET(request: NextRequest) {
-  const supabase = await createSupabaseServerClient()
+  const { searchParams, origin } = new URL(request.url);
 
-  // Supabase will handle the code exchange and set the session cookies
-  const {
-    data: { session },
-    error
-  } = await supabase.auth.getSession()
+  // Extract auth code and optional redirect path
+  const code = searchParams.get("code");
+  const redirectTo = searchParams.get("redirectTo") ?? "/";
 
-  // Determine target redirect
-  const redirectTo = request.nextUrl.searchParams.get('redirectTo') || '/home'
+  if (code) {
+    const supabase = await createSupabaseServerClient();
 
-  if (error) {
-    const url = new URL('/sign-in', request.url)
-    url.searchParams.set('error', 'Authentication failed.')
-    url.searchParams.set('redirectTo', redirectTo)
-    return NextResponse.redirect(url)
+    // Exchange the auth code for a session
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (!error) {
+      // Redirect to the intended path or fallback to homepage
+      return NextResponse.redirect(`${origin}${redirectTo}`);
+    }
   }
 
-  if (!session) {
-    const url = new URL('/sign-in', request.url)
-    url.searchParams.set('error', 'No session returned.')
-    url.searchParams.set('redirectTo', redirectTo)
-    return NextResponse.redirect(url)
-  }
-
-  const url = new URL(redirectTo, request.url)
-  return NextResponse.redirect(url)
+  // In case of any issues, redirect to sign-in with an error message
+  const signInUrl = new URL('/sign-in', origin);
+  signInUrl.searchParams.set('error', 'Failed to authenticate.');
+  return NextResponse.redirect(signInUrl);
 }
