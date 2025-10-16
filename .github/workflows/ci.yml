@@ -54,7 +54,3 @@ jobs:
 
       - name: Run ESLint
         run: npm run lint
-          if [ -f package-lock.json ]; then
-          npm ci --silent
-          fi
-          npm run lint
