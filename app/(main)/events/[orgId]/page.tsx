@@ -8,21 +8,29 @@ import {
 } from "@/components/reusables/containers";
 import { Suspense } from "react";
 import EventsServer from "@/components/events/events-server";
+import { getUserData } from "@/lib/queries/user";
 
-async function OrganizationEventsPage() {
+async function OrganizationEventsPage({
+    params,
+}: {
+    params: { orgId: string };
+}) {
+    const { orgId } = params;
+
+    const orgData = await getUserData(orgId);
+
     return (
         <PageContainer>
             <PageContentHeader
-                title="Organization Name"
-                description="See and manage the events of this organization" />
+                title={orgData?.full_name || orgData?.name || "Unknown Organization"}
+                description="See and manage the events of this organization"
+            />
 
             <PageContentMain>
-                <Suspense fallback={<div>Loading events...</div>}>
-                    <GenerateCodeButton
-                        variant={"primary"}
-                        className="self-start mb-4" />
+                <Suspense>
+                    <GenerateCodeButton variant={"primary"} className="self-start mb-4" />
                     {/* EVENTS  */}
-                    <EventsServer />
+                    <EventsServer eventUserId={orgId} />
                 </Suspense>
             </PageContentMain>
         </PageContainer>

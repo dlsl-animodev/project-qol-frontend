@@ -36,3 +36,19 @@ export async function getUsers(page: number = 1, pageSize: number = 10): Promise
 
     return { users: data || [], total: count || 0 };
 }
+
+export async function getUserData(userId: string): Promise<UserData> {
+    const supabase = await createSupabaseServerClient();
+
+    const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', userId)
+        .single();
+        
+    if (error || !data) {
+        throw new Error(`Error fetching user data: ${error?.message}`);
+    }
+
+    return data as UserData;
+}
