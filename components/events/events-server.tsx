@@ -11,7 +11,6 @@
     This setup separates server and client components for better organization and maintainability
 */
 
-import { dummyEvents } from "@/dummy";
 import { CardContainer } from "../reusables/containers";
 import EventCard from "./event-card";
 import { getEventsForUser } from "@/lib/queries/events";
