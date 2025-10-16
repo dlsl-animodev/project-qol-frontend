@@ -3,10 +3,11 @@
 //server actions for attendance management MUTATIONS
 
 import { revalidatePath } from 'next/cache'
-import { supabase } from '@/lib/supabase/server'
+import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { validateCodeAndGetEvent } from '@/lib/queries/events'
 import { fetchStudentInfo, formatStudentName } from '@/lib/api/student'
 import { hasAttended } from '@/lib/queries/attendance'
+import { requireUser } from '@/lib/supabase/auth'
 import type { Attendance, StudentInfo } from '@/types/database'
 
 export async function recordAttendance(
@@ -21,8 +22,10 @@ export async function recordAttendance(
   event?: { id: string; name: string; code: string; date: string }
 }> {
   try {
+    await requireUser()
+    const supabase = await createSupabaseServerClient()
 
-    const validation = await validateCodeAndGetEvent(code)
+    const validation = await validateCodeAndGetEvent(code, supabase)
 
     if (!validation.valid || !validation.event) {
       return {
@@ -41,7 +44,7 @@ export async function recordAttendance(
       }
     }
 
-    const alreadyAttended = await hasAttended(validation.event.id, studentId)
+    const alreadyAttended = await hasAttended(validation.event.id, studentId, supabase)
 
     if (alreadyAttended) {
       return {
@@ -103,6 +106,8 @@ export async function deleteAttendance(attendanceId: string): Promise<{
   error?: string
 }> {
   try {
+    await requireUser()
+    const supabase = await createSupabaseServerClient()
     const { error } = await supabase
       .from('attendance')
       .delete()

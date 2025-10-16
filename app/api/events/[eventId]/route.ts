@@ -4,15 +4,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getEventAttendance, getAttendanceCount } from '@/lib/queries/attendance'
 import { getEventById } from '@/lib/queries/events'
+import { createSupabaseServerClient } from '@/lib/supabase/server'
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ eventId: string }> }
 ) {
   try {
+    const supabase = await createSupabaseServerClient()
+
     const { eventId } = await params
 
-    const event = await getEventById(eventId)
+    const event = await getEventById(eventId, supabase)
 
     if (!event) {
       return NextResponse.json(
@@ -24,8 +27,8 @@ export async function GET(
       )
     }
 
-    const attendance = await getEventAttendance(eventId)
-    const count = await getAttendanceCount(eventId)
+    const attendance = await getEventAttendance(eventId, supabase)
+    const count = await getAttendanceCount(eventId, supabase)
 
     return NextResponse.json({
       success: true,

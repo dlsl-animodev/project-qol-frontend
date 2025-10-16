@@ -3,9 +3,11 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { validateCodeAndGetEvent } from '@/lib/queries/events'
+import { createSupabaseServerClient } from '@/lib/supabase/server'
 
 export async function POST(request: NextRequest) {
   try {
+    const supabase = await createSupabaseServerClient()
     const body = await request.json()
     const { code } = body
 
@@ -18,10 +20,6 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
-
-    // if (!code) {
-    //   // existing presence-check handling
-    // }
     
     if (!code) {
       return NextResponse.json(
@@ -33,7 +31,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const validation = await validateCodeAndGetEvent(code)
+    const validation = await validateCodeAndGetEvent(code, supabase)
 
     if (!validation.valid) {
       return NextResponse.json(

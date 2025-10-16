@@ -3,7 +3,8 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { supabase } from '@/lib/supabase/server'
+import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { requireUser } from '@/lib/supabase/auth'
 import type { Event, Code } from '@/types/database'
 
 function generateCode(): string {
@@ -27,6 +28,8 @@ export async function createEventWithCode(eventData: {
   message?: string
 }> {
   try {
+    await requireUser()
+    const supabase = await createSupabaseServerClient()
 
     let code = generateCode()
     let attempts = 0
@@ -39,9 +42,9 @@ export async function createEventWithCode(eventData: {
         .eq('code', code)
         .single()
 
-      if (!existingCode)  {
+      if (!existingCode) {
         break
-    }
+      }
       code = generateCode()
       attempts++
     }
@@ -123,6 +126,8 @@ export async function deactivateCode(codeId: string): Promise<{
   error?: string
 }> {
   try {
+    await requireUser()
+    const supabase = await createSupabaseServerClient()
     const { error } = await supabase
       .from('codes')
       .update({ is_active: false })
@@ -155,6 +160,8 @@ export async function reactivateCode(codeId: string): Promise<{
   error?: string
 }> {
   try {
+    await requireUser()
+    const supabase = await createSupabaseServerClient()
     const { error } = await supabase
       .from('codes')
       .update({ is_active: true })
@@ -191,6 +198,8 @@ export async function updateEvent(
   error?: string
 }> {
   try {
+    await requireUser()
+    const supabase = await createSupabaseServerClient()
     const { data, error } = await supabase
       .from('events')
       .update(updates)
@@ -227,6 +236,8 @@ export async function deleteEvent(eventId: string): Promise<{
   error?: string
 }> {
   try {
+    await requireUser()
+    const supabase = await createSupabaseServerClient()
     const { error } = await supabase
       .from('events')
       .delete()

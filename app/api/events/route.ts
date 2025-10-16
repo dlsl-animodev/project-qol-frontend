@@ -3,14 +3,17 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { getAllEvents, getEventByCode } from '@/lib/queries/events'
+import { createSupabaseServerClient } from '@/lib/supabase/server'
 
 export async function GET(request: NextRequest) {
   try {
+    const supabase = await createSupabaseServerClient();
+
     const searchParams = request.nextUrl.searchParams
     const code = searchParams.get('code')
 
     if (code) {
-      const event = await getEventByCode(code)
+      const event = await getEventByCode(code, supabase)
 
       if (!event) {
         return NextResponse.json(
@@ -28,7 +31,7 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    const events = await getAllEvents()
+    const events = await getAllEvents(supabase)
 
     return NextResponse.json({
       success: true,

@@ -7,6 +7,7 @@ import Footer from "@/components/footer";
 
 import localFont from "next/font/local";
 import { Toaster } from "@/components/ui/sonner";
+import { Suspense } from "react";
 
 export const pixelGamer = localFont({
     src: [
@@ -51,7 +52,9 @@ export default function RootLayout({
                 <Header />
                 <main className="min-h-screen">
                     <div className="h-12 bg-primary" />
-                    {children}
+                    <Suspense>
+                      {children}
+                    </Suspense>
                     <Toaster />
                 </main>
                 <Footer />

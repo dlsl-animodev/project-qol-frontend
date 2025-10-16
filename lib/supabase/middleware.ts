@@ -1,0 +1,111 @@
+import { createServerClient } from '@supabase/ssr'
+import { UserAppMetadata, UserMetadata } from '@supabase/supabase-js'
+import { NextResponse, type NextRequest } from 'next/server'
+
+export async function updateSession(request: NextRequest) {
+  let supabaseResponse = NextResponse.next({
+    request,
+  })
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
+          supabaseResponse = NextResponse.next({
+            request,
+          })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          )
+        },
+      },
+    }
+  )
+
+  // IMPORTANT: Avoid writing any logic between createServerClient and
+  // supabase.auth.getClaims(). A simple mistake could make it very hard to debug
+  // issues with users being randomly logged out.
+
+  // IMPORTANT: Don't remove getClaims()
+  const { data } = await supabase.auth.getClaims()
+
+  const user = data?.claims
+
+  if (
+    !user &&
+    !request.nextUrl.pathname.startsWith('/sign-in') &&
+    !request.nextUrl.pathname.startsWith('/auth')
+  ) {
+    // no user, potentially respond by redirecting the user to the sign-in page
+    const url = request.nextUrl.clone()
+    url.pathname = '/sign-in'
+    return NextResponse.redirect(url)
+  }
+
+  // Guard admin-only routes by checking the authenticated user's role metadata
+  // Note: Do this AFTER getClaims() to avoid session/cookie desync issues.
+  const pathname = request.nextUrl.pathname
+  const isAdminPath = pathname === '/admin' || pathname.startsWith('/admin/')
+
+  if (user && isAdminPath) {
+    // Only fetch the full user object when necessary (for admin routes)
+    const { data: userData } = await supabase.auth.getUser()
+    const supaUser = userData?.user
+
+    const isAdmin = (() => {
+      // Look across common places teams store roles
+      const appMeta: UserAppMetadata = supaUser?.app_metadata || {}
+      const userMeta: UserMetadata = supaUser?.user_metadata || {}
+      const candidates: unknown[] = [
+        appMeta.role,
+        appMeta.roles,
+        userMeta.role,
+        userMeta.roles,
+        userMeta.is_admin,
+      ].filter((v) => v !== undefined && v !== null)
+
+      return candidates.some((v) => {
+        if (typeof v === 'string') return v.toLowerCase() === 'admin'
+        if (Array.isArray(v)) return v.map(String).map((s) => s.toLowerCase()).includes('admin')
+        if (typeof v === 'boolean') return v === true
+        return false
+      })
+    })()
+
+    if (!isAdmin) {
+      // Logged-in but not an admin: redirect to a safe page, preserve cookies
+      const url = request.nextUrl.clone()
+      url.pathname = '/home'
+      // Optional: include a hint in the query string
+      url.searchParams.set('error', 'forbidden')
+
+      const redirectResponse = NextResponse.redirect(url)
+      // Preserve Supabase cookies to avoid logging the user out
+      supabaseResponse.cookies.getAll().forEach((c) => {
+        redirectResponse.cookies.set(c)
+      })
+      return redirectResponse
+    }
+  }
+
+  // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
+  // creating a new response object with NextResponse.next() make sure to:
+  // 1. Pass the request in it, like so:
+  //    const myNewResponse = NextResponse.next({ request })
+  // 2. Copy over the cookies, like so:
+  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
+  // 3. Change the myNewResponse object to fit your needs, but avoid changing
+  //    the cookies!
+  // 4. Finally:
+  //    return myNewResponse
+  // If this is not done, you may be causing the browser and server to go out
+  // of sync and terminate the user's session prematurely!
+
+  return supabaseResponse
+}
