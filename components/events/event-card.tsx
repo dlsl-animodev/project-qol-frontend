@@ -3,7 +3,14 @@ import { Description, Subtitle } from "../reusables/texts";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import {  CardItem, CardItemFooter, CardItemHeader, CardItemMain, CardStats, CardStatsItem } from "../reusables/card-item";
+import {
+    CardItem,
+    CardItemFooter,
+    CardItemHeader,
+    CardItemMain,
+    CardStats,
+    CardStatsItem,
+} from "../reusables/card-item";
 
 interface EventCardProps {
     id: string;
@@ -15,7 +22,8 @@ interface EventCardProps {
     location: string;
     time: string;
 }
-const EventCard: React.FC<EventCardProps> = ({
+
+function EventCard({
     id,
     title,
     description,
@@ -24,7 +32,7 @@ const EventCard: React.FC<EventCardProps> = ({
     date,
     location,
     time,
-}) => {
+}: EventCardProps) {
     // Convert the stats to mappable array
     const stats = [
         { label: "attendees", value: attendees, icon: User },
@@ -50,9 +58,7 @@ const EventCard: React.FC<EventCardProps> = ({
             <CardItemMain>
                 <CardStats className="grid grid-cols-2 gap-2">
                     {stats.map((stat) => (
-                        <CardStatsItem
-                            key={stat.label}
-                        >
+                        <CardStatsItem key={stat.label}>
                             <stat.icon size={17} /> {stat.value} {stat.label}
                         </CardStatsItem>
                     ))}
@@ -67,6 +73,6 @@ const EventCard: React.FC<EventCardProps> = ({
             </CardItemFooter>
         </CardItem>
     );
-};
+}
 
 export default EventCard;

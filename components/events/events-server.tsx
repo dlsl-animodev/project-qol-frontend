@@ -15,9 +15,10 @@ import { dummyEvents } from "@/dummy";
 import { CardContainer } from "../reusables/containers";
 import EventCard from "./event-card";
 import { getEventsForUser } from "@/lib/queries/events";
+import { Event } from "@/types/database";
 
 async function EventsServer() {
-    const events = await getEventsForUser();
+    const events: Event[] = await getEventsForUser();
 
     if (events.length === 0) {
         return (
@@ -29,17 +30,17 @@ async function EventsServer() {
 
     return (
         <CardContainer>
-            {dummyEvents.map((event, index) => (
+            {events.map((event: Event, index) => (
                 <EventCard
                     id={index.toString()}
                     key={index}
-                    title={event.title}
-                    description={event.description}
-                    status={event.status}
-                    attendees={event.attendees}
-                    date={event.date}
-                    location={event.location}
-                    time={event.time} />
+                    title={event.event_name}
+                    description={event.description || 'No description provided'}
+                    status={"Scheduled"}
+                    attendees={0}
+                    date={event.event_date}
+                    location={"Not specified"}
+                    time={"Not Specificed"} />
             ))}
         </CardContainer>
     );
