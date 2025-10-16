@@ -1,6 +1,6 @@
 # Install / Run Instructions
 
-This file explains how to install and run the project when you have received the repository ZIP archive (e.g. `project-<short-sha>.zip`) produced by CI.
+This file explains how to install and run the project when you have received the repository ZIP archive (e.g. `project-qol-frontend.zip`) produced by CI.
 
 These instructions assume the ZIP contains the full project (source, `package.json`, `app`, `public`, etc.).
 
