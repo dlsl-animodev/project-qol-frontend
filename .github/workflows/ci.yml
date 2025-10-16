@@ -66,15 +66,14 @@ jobs:
 
       - name: Prepare ALL_SECRETS JSON # Serialize all repository secrets into one JSON file environment variable
         run: | # This step uses toJson(secrets) to capture all repository secrets into a single JSON object, then strips newlines for safe storage in an env var.
-          echo "ALL_SECRETS_JSON=$(echo '${{ toJson(secrets) }}' | tr -d '\n')" >> $GITHUB_ENV
+          echo '${{ toJson(secrets) }}' > secrets.json
+          for key in $(jq -r 'keys[]' secrets.json); do
+            value=$(jq -r --arg k "$key" '.[$k]' secrets.json)
+            echo "$key=$value" >> $GITHUB_ENV
+          done
 
       - name: Build
         run: npm run build
-
-        env: # Pass environment variables to the build script
-            NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-            SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-            STUDENT_API_URL: ${{ secrets.STUDENT_API_URL }}
           
       - name: Ensure zip is available
         # On some runner images `zip` may not be installed by default. Install
