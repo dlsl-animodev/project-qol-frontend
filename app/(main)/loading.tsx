@@ -3,10 +3,11 @@
 import { Spinner } from "@/components/ui/spinner"
 import { Skeleton } from "@/components/ui/skeleton"
 import { CardContent } from "@/components/ui/card"
+import { CardContainer, PageContainer } from "@/components/reusables/containers"
 
 export default function Loading() {
     return (
-        <div className="p-4 md:p-6">
+        <PageContainer>
             <div className="flex items-center gap-2 text-muted-foreground mb-4">
                 <Spinner className="size-5" />
                 <span>Loading content…</span>
@@ -21,15 +22,15 @@ export default function Loading() {
             {/* Cards/Table placeholder grid */}
             <CardContent>
                 {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="space-y-3">
+                    <CardContainer key={i}>
                         <Skeleton className="h-40 w-full" />
                         <div className="flex gap-3">
                             <Skeleton className="h-4 w-1/2" />
                             <Skeleton className="h-4 w-1/3" />
                         </div>
-                    </div>
+                    </CardContainer>
                 ))}
             </CardContent>
-        </div>
+        </PageContainer>
     )
 }
