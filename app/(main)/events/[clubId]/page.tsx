@@ -7,12 +7,12 @@ import {
 import { Suspense } from "react";
 import EventsServer from "@/components/events/events-server";
 
-const ClubEventsPage = () => {
+const OrganizationEventsPage = () => {
     return (
         <PageContainer>
             <PageContentHeader
-                title="Club Name"
-                description="See and manage the events of this club"
+                title="Organization Name"
+                description="See and manage the events of this organization"
             />
 
             <PageContentMain>
@@ -29,4 +29,4 @@ const ClubEventsPage = () => {
     );
 };
 
-export default ClubEventsPage;
+export default OrganizationEventsPage;

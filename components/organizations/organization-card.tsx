@@ -12,20 +12,16 @@ import {
     CardStatsItem,
 } from "../reusables/card-item";
 
-interface ClubCardProps {
+interface OrganizationCardProps {
     id: string;
     name: string;
     description: string;
     pastEvents: number;
     upcomingEvents: number;
 }
-const ClubCard: React.FC<ClubCardProps> = ({
-    id,
-    name,
-    description,
-    pastEvents,
-    upcomingEvents,
-}) => {
+function OrganizationCard({
+    id, name, description, pastEvents, upcomingEvents,
+}: OrganizationCardProps) {
     // Convert the stats to mappable array
     const stats = [
         {
@@ -64,6 +60,6 @@ const ClubCard: React.FC<ClubCardProps> = ({
             </CardItemFooter>
         </CardItem>
     );
-};
+}
 
-export default ClubCard;
+export default OrganizationCard;

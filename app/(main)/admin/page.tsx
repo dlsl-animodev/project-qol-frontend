@@ -1,3 +1,5 @@
+"use server";
+
 import TypingAnimation from "@/components/interactive/typing-animation";
 import {
     PageContainer,
@@ -5,17 +7,16 @@ import {
     PageContentMain,
     TypingAnimationBackgroundContainer,
 } from "@/components/reusables/containers";
-import ClubsServer from "@/components/clubs/clubs-server";
+import OrganizationsServer from "@/components/organizations/organizations-server";
 import { Suspense } from "react";
 
-const AdminPage = () => {
+async function AdminPage() {
     return (
         <>
             <TypingAnimationBackgroundContainer>
                 <TypingAnimation
                     text="Good to see you back devers!"
-                    className="text-6xl font-bold tracking-wide font-pixel text-center text-primary-foreground "
-                />
+                    className="text-6xl font-bold tracking-wide font-pixel text-center text-primary-foreground " />
             </TypingAnimationBackgroundContainer>
 
             <PageContainer>
@@ -26,19 +27,18 @@ const AdminPage = () => {
                 </div>
 
                 <PageContentHeader
-                    title="Clubs in Dashboard"
-                    description="See and manage clubs and their events here"
-                />
+                    title="Organizations in Dashboard"
+                    description="See and manage organizations and their events here" />
 
                 <PageContentMain>
-                    {/* CLUBS  */}
-                    <Suspense fallback={<div>Loading clubs...</div>}>
-                        <ClubsServer />
+                    {/* ORGANIZATIONS  */}
+                    <Suspense fallback={<div>Loading organizations...</div>}>
+                        <OrganizationsServer />
                     </Suspense>
                 </PageContentMain>
             </PageContainer>
         </>
     );
-};
+}
 
 export default AdminPage;
