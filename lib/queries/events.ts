@@ -1,10 +1,32 @@
 // query functions for events
 
-import { Supabase } from '@/lib/supabase/server'
+import { createSupabaseServerClient, Supabase } from '@/lib/supabase/server'
 import type { Event, Code } from '@/types/database'
 
 const SUPABASE_NO_ROWS_ERROR = 'PGRST116'
 
+export async function getEventsForUser(): Promise<Event[]> {
+  const client = await createSupabaseServerClient();
+
+  const { data: session } = await client.auth.getSession();
+  if (!session?.session?.user) {
+    return [];
+  }
+
+  const userId = session.session.user.id;
+
+  const { data, error } = await client
+    .from('events')
+    .select('*')
+    .eq('user_id', userId)
+    .order('event_date', { ascending: false });
+
+  if (error) {
+    throw new Error(`Error fetching events for user: ${error.message}`);
+  }
+
+  return data as Event[];
+}
 
 export async function getEventByCode(eventCode: string, client: Supabase): Promise<Event | null> {
   const { data, error } = await client

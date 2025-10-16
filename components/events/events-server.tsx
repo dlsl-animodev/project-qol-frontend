@@ -1,3 +1,5 @@
+"use server";
+
 /*
     THIS COMPONENT IS FOR SERVER SIDE RENDERING OF EVENTS
 
@@ -12,10 +14,18 @@
 import { dummyEvents } from "@/dummy";
 import { CardContainer } from "../reusables/containers";
 import EventCard from "./event-card";
+import { getEventsForUser } from "@/lib/queries/events";
 
-const EventsServer = async () => {
-    // Simulate an await for fetching data
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+async function EventsServer() {
+    const events = await getEventsForUser();
+
+    if (events.length === 0) {
+        return (
+            <div className="text-center text-muted-foreground">
+                No events found for you, request an event to be created for you.
+            </div>
+        );
+    }
 
     return (
         <CardContainer>
@@ -29,11 +39,10 @@ const EventsServer = async () => {
                     attendees={event.attendees}
                     date={event.date}
                     location={event.location}
-                    time={event.time}
-                />
+                    time={event.time} />
             ))}
         </CardContainer>
     );
-};
+}
 
 export default EventsServer;
