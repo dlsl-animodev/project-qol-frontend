@@ -33,7 +33,6 @@ const HomePage = () => {
                 <PageContentMain>
                     {/* EVENTS  */}
                     <Suspense fallback={<div>Loading events...</div>}>
-                    <NewEventCodeButton className="mb-4 self-start" />
                         <EventsServer />
                     </Suspense>
                 </PageContentMain>

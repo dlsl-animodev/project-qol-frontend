@@ -16,6 +16,16 @@ import { CardContainer } from "../reusables/containers";
 import EventCard from "./event-card";
 import { getEventsForUser } from "@/lib/queries/events";
 import { Event } from "@/types/database";
+import {
+    Empty,
+    EmptyContent,
+    EmptyDescription,
+    EmptyHeader,
+    EmptyMedia,
+    EmptyTitle,
+} from "@/components/ui/empty";
+import { CalendarX } from "lucide-react";
+import NewEventCodeButton from "@/components/events/new-event-code-button";
 
 export interface EventsServerProps {
     eventUserId?: string;
@@ -29,9 +39,22 @@ async function EventsServer({ eventUserId }: EventsServerProps) {
 
     if (events.length === 0) {
         return (
-            <div className="text-center text-muted-foreground">
-                No events found for you, request an event to be created for you.
-            </div>
+            <Empty className="w-full border bg-muted/10">
+                <EmptyHeader>
+                    <EmptyMedia variant="icon">
+                        <CalendarX className="size-6" />
+                    </EmptyMedia>
+                    <EmptyTitle className="font-pixel text-accent">
+                        No events yet
+                    </EmptyTitle>
+                    <EmptyDescription>
+                        Once ANIMO.DEV has approved your event, it will appear here.
+                    </EmptyDescription>
+                </EmptyHeader>
+                <EmptyContent>
+                    <NewEventCodeButton className="self-center" />
+                </EmptyContent>
+            </Empty>
         );
     }
 
