@@ -19,7 +19,7 @@ export async function createEvent(eventData: {
   message?: string
 }> {
   try {
-    await requireUser()
+    const user = await requireUser()
     const supabase = await createSupabaseServerClient()
 
     // code is no longer used, but we keep it for record-keeping purposes
@@ -31,6 +31,7 @@ export async function createEvent(eventData: {
       .from('events')
       .insert({
         event_name: eventData.event_name,
+        user_id: user.id,
         event_code: code,
         event_date: eventData.event_date,
         description: eventData.description || null
