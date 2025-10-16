@@ -30,11 +30,10 @@ async function OrganizationsServer({ page = 1, pageSize = 9 }: OrganizationsServ
     return (
         <div className="flex flex-col gap-6">
             <CardContainer>
-                {users.map((user: any) => {
-                    const id = user.id?.toString?.() ?? "";
+                {(users).map((user) => {
+                    const id = user.id != null ? String(user.id) : "";
                     const name = user.full_name || user.name || user.email || "Organization";
-                    const description =
-                        user.bio || user.description || user.email || "No description available.";
+                    const description = user.bio || user.description || user.email || "No description available.";
                     return (
                         <OrganizationCard
                             id={id}

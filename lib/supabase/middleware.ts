@@ -1,5 +1,4 @@
 import { createServerClient } from '@supabase/ssr'
-import { UserAppMetadata, UserMetadata } from '@supabase/supabase-js'
 import { NextResponse, type NextRequest } from 'next/server'
 import { getUserRole } from '../queries/user'
 
@@ -57,7 +56,7 @@ export async function updateSession(request: NextRequest) {
   if (user && isAdminPath) {
     const userRole = await getUserRole();
     const isAdmin = userRole === 'admin';
-    
+
     if (!isAdmin) {
       // Logged-in but not an admin: redirect to a safe page, preserve cookies
       const url = request.nextUrl.clone()

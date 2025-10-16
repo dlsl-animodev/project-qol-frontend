@@ -1,4 +1,4 @@
-import { UserRole } from "@/types/database";
+import { UserData, UserRole } from "@/types/database";
 import { createSupabaseServerClient, Supabase } from "../supabase/server";
 import { requireUser } from "../supabase/auth";
 
@@ -22,7 +22,7 @@ export async function getUserRole(): Promise<UserRole> {
     return data.role as UserRole;
 }
 
-export async function getUsers(page: number = 1, pageSize: number = 10): Promise<{ users: any[]; total: number }> {
+export async function getUsers(page: number = 1, pageSize: number = 10): Promise<{ users: UserData[]; total: number }> {
     const supabase = await createSupabaseServerClient();
     
     const { data, error, count } = await supabase
