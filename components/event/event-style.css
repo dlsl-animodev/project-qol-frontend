@@ -1,0 +1,112 @@
+/*
+  CRT screen overlay effects
+  - ::before: scanline & RGB subpixel tint with flicker
+  - ::after: vertical scanline sweep
+*/
+.crt-screen::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+    linear-gradient(
+      90deg,
+      rgba(255, 0, 0, 0.06),
+      rgba(0, 255, 0, 0.02),
+      rgba(0, 0, 255, 0.06)
+    );
+  z-index: 2;
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+  animation: flicker 0.15s infinite;
+}
+
+.crt-screen::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(18, 16, 16, 0.1);
+  opacity: 0;
+  z-index: 2;
+  pointer-events: none;
+  animation: scanline 4s linear infinite;
+}
+
+/*
+  Screen bulge & perspective container
+*/
+.crt-content-bulge {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  clip-path: ellipse(110% 100% at 50% 108%);
+  transform-origin: center top;
+  transform: perspective(900px) rotateX(8deg) translateZ(0);
+  will-change: transform;
+  background-image: radial-gradient(100% 60% at 50% 30%, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02) 18%, rgba(0, 0, 0, 0.06) 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.03));
+  background-blend-mode: overlay;
+  box-shadow: inset 0 28px 60px rgba(0, 0, 0, 0.55), inset 0 -10px 24px rgba(255, 255, 255, 0.02), 0 10px 30px rgba(0, 0, 0, 0.35);
+  filter: saturate(1.03) contrast(1.02);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+  width: 100%;
+  height: 100%;
+}
+
+.bg-grid-animated {
+  font-family: "Press Start 2P", cursive;
+  background-color: transparent;
+  background-image: linear-gradient(
+      rgba(249, 115, 22, 0.07) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(249, 115, 22, 0.07) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: move-grid 3s linear infinite;
+}
+
+/*
+  Animations
+*/
+@keyframes flicker {
+  0% {
+    opacity: 0.2;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.2;
+  }
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-10%);
+    opacity: 0.2;
+  }
+
+  100% {
+    transform: translateY(110%);
+    opacity: 0.2;
+  }
+}
+
+@keyframes move-grid {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 40px 40px;
+  }
+}
