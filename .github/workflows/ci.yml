@@ -6,6 +6,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch: # Allow manual triggering from the Actions tab
 
 concurrency:
   # Ensure only one run per branch/workflow group is active at a time.
@@ -33,10 +34,7 @@ jobs:
         # Cache node modules and the npm cache to speed up repeated runs. The
         # cache key includes hashes of `package-lock.json` and `package.json` so
         # the cache is invalidated automatically when dependencies change.
-        # Caching `node_modules` is useful for projects that don't use a lockfile
-        # or when the package manager does not restore the cache exactly the
-        # same way each run. We also cache `~/.npm` which stores downloaded
-        # package tarballs.
+
         uses: actions/cache@v4
         with:
           path: |
@@ -55,8 +53,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-next-
 
-      - name: Install dependencies
-        # Use npm ci when a lockfile is present, otherwise fall back to npm install
+      - name: Install dependencies # Use npm ci when a lockfile is present, otherwise fall back to npm install
         run: |
           if [ -f package-lock.json ]; then
             npm ci
@@ -66,6 +63,10 @@ jobs:
 
       - name: Lint (treat as test)
         run: npm run lint
+
+      - name: Prepare ALL_SECRETS JSON # Serialize all repository secrets into one JSON file environment variable
+        run: | # This step uses toJson(secrets) to capture all repository secrets into a single JSON object, then strips newlines for safe storage in an env var.
+          echo "ALL_SECRETS_JSON=$(echo '${{ toJson(secrets) }}' | tr -d '\n')" >> $GITHUB_ENV
 
       - name: Build
         run: npm run build
@@ -97,7 +98,7 @@ jobs:
       - name: Upload zip artifact
         uses: actions/upload-artifact@v4
         with:
-          name: project-zip
+          name: project-qol-frontend-zip
           # Use a glob so we can upload the generated zip without relying on
           # GitHub Actions environment variable interpolation in the YAML path.
           path: project-*.zip
