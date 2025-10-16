@@ -68,6 +68,8 @@ export async function updateSession(request: NextRequest) {
         userMeta.role,
         userMeta.roles,
         userMeta.is_admin,
+        appMeta.user_role,
+        userMeta.user_role,
       ].filter((v) => v !== undefined && v !== null)
 
       return candidates.some((v) => {
