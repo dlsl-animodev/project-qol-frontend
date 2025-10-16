@@ -72,6 +72,8 @@ export async function updateSession(request: NextRequest) {
         userMeta.user_role,
       ].filter((v) => v !== undefined && v !== null)
 
+      console.log('Role candidates:', candidates)
+
       return candidates.some((v) => {
         if (typeof v === 'string') return v.toLowerCase() === 'admin'
         if (Array.isArray(v)) return v.map(String).map((s) => s.toLowerCase()).includes('admin')
