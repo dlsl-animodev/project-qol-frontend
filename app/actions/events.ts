@@ -5,61 +5,33 @@
 import { revalidatePath } from 'next/cache'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { requireUser } from '@/lib/supabase/auth'
-import type { Event, Code } from '@/types/database'
+import type { Event } from '@/types/database'
 
-function generateCode(): string {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-  let code = ''
-  for (let i = 0; i < 8; i++) {
-    const randomIndex = crypto.getRandomValues(new Uint32Array(1))[0] % chars.length
-    code += chars.charAt(randomIndex)
-  }
-  return code
-}
-export async function createEventWithCode(eventData: {
+
+export async function createEvent(eventData: {
   event_name: string
   event_date: string
   description?: string
 }): Promise<{
   success: boolean
   event?: Event
-  code?: Code
   error?: string
   message?: string
 }> {
   try {
-    await requireUser()
+    const user = await requireUser()
     const supabase = await createSupabaseServerClient()
 
-    let code = generateCode()
-    let attempts = 0
-    const maxAttempts = 10
+    // code is no longer used, but we keep it for record-keeping purposes
+    const code = Math.random().toString(36).substring(2, 8).toUpperCase()
 
-    while (attempts < maxAttempts) {
-      const { data: existingCode } = await supabase
-        .from('codes')
-        .select('code')
-        .eq('code', code)
-        .single()
-
-      if (!existingCode) {
-        break
-      }
-      code = generateCode()
-      attempts++
-    }
-
-    if (attempts === maxAttempts) {
-      return {
-        success: false,
-        error: 'Failed to generate unique code after multiple attempts'
-      }
-    }
+    // Start a transaction
 
     const { data: event, error: eventError } = await supabase
       .from('events')
       .insert({
         event_name: eventData.event_name,
+        user_id: user.id,
         event_code: code,
         event_date: eventData.event_date,
         description: eventData.description || null
@@ -74,41 +46,12 @@ export async function createEventWithCode(eventData: {
         error: eventError?.message || 'Failed to create event'
       }
     }
-
-    const { data: codeData, error: codeError } = await supabase
-      .from('codes')
-      .insert({
-        code: code,
-        event_id: event.id,
-        is_active: true,
-        expires_at: null
-      })
-      .select()
-      .single()
-
-    if (codeError || !codeData) {
-      console.error('Error creating code:', codeError)
-
-      const { error: deleteError } = await supabase
-        .from('events')
-        .delete()
-        .eq('id', event.id)
-      if (deleteError) {
-        console.error('Failed to rollback event creation:', deleteError)
-      }
-
-      return {
-        success: false,
-        error: codeError?.message || 'Failed to create code'
-      }
-    }
     revalidatePath('/admin')
     revalidatePath('/home')
 
     return {
       success: true,
       event: event as Event,
-      code: codeData as Code,
       message: 'Event created successfully'
     }
   } catch (error) {

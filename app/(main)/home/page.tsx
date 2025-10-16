@@ -22,7 +22,7 @@ const HomePage = () => {
             <PageContainer>
                 {/* JUST A CUSTOM NOTE  */}
                 <div className="bg-accent px-4 py-1 text-xs rounded-md text-accent-foreground font-bold">
-                    THIS IS THE VIEW OF THE CLUBS. GO ADMIN FOR ADMIN VIEW.
+                    THIS IS THE VIEW OF THE ORGANIZATIONS. GO ADMIN FOR ADMIN VIEW.
                 </div>
 
                 <PageContentHeader
