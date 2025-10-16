@@ -2,6 +2,7 @@
 
 import { Spinner } from "@/components/ui/spinner"
 import { Skeleton } from "@/components/ui/skeleton"
+import { CardContent } from "@/components/ui/card"
 
 export default function Loading() {
     return (
@@ -18,7 +19,7 @@ export default function Loading() {
             </div>
 
             {/* Cards/Table placeholder grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <CardContent>
                 {Array.from({ length: 6 }).map((_, i) => (
                     <div key={i} className="space-y-3">
                         <Skeleton className="h-40 w-full" />
@@ -28,7 +29,7 @@ export default function Loading() {
                         </div>
                     </div>
                 ))}
-            </div>
+            </CardContent>
         </div>
     )
 }
