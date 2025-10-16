@@ -57,7 +57,7 @@ export async function updateSession(request: NextRequest) {
     // Only fetch the full user object when necessary (for admin routes)
     const { data: userData } = await supabase.auth.getUser();
     const supaUser = userData?.user;
-    
+
     // No user? Redirect to sign-in
     if (!supaUser) {
       const url = request.nextUrl.clone()
@@ -80,6 +80,8 @@ export async function updateSession(request: NextRequest) {
       ].filter((v) => v !== undefined && v !== null)
 
       console.log('Role candidates:', candidates)
+      console.log('App metadata:', appMeta)
+      console.log('User metadata:', userMeta)
 
       return candidates.some((v) => {
         if (typeof v === 'string') return v.toLowerCase() === 'admin'
