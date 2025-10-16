@@ -55,8 +55,15 @@ export async function updateSession(request: NextRequest) {
 
   if (user && isAdminPath) {
     // Only fetch the full user object when necessary (for admin routes)
-    const { data: userData } = await supabase.auth.getUser()
-    const supaUser = userData?.user
+    const { data: userData } = await supabase.auth.getSession()
+    const supaUser = userData?.session?.user
+
+    // No user? Redirect to sign-in
+    if (!supaUser) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/sign-in'
+      return NextResponse.redirect(url)
+    }
 
     const isAdmin = (() => {
       // Look across common places teams store roles
