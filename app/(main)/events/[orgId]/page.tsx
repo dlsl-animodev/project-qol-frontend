@@ -1,3 +1,5 @@
+"use server";
+
 import GenerateCodeButton from "@/components/events/generate-code-button";
 import {
     PageContainer,
@@ -7,26 +9,24 @@ import {
 import { Suspense } from "react";
 import EventsServer from "@/components/events/events-server";
 
-const OrganizationEventsPage = () => {
+async function OrganizationEventsPage() {
     return (
         <PageContainer>
             <PageContentHeader
                 title="Organization Name"
-                description="See and manage the events of this organization"
-            />
+                description="See and manage the events of this organization" />
 
             <PageContentMain>
                 <Suspense fallback={<div>Loading events...</div>}>
                     <GenerateCodeButton
                         variant={"primary"}
-                        className="self-start mb-4"
-                    />
+                        className="self-start mb-4" />
                     {/* EVENTS  */}
                     <EventsServer />
                 </Suspense>
             </PageContentMain>
         </PageContainer>
     );
-};
+}
 
 export default OrganizationEventsPage;

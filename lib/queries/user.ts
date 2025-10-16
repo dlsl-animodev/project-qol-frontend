@@ -1,5 +1,5 @@
 import { UserData, UserRole } from "@/types/database";
-import { createSupabaseServerClient, Supabase } from "../supabase/server";
+import { createSupabaseServerClient } from "../supabase/server";
 import { requireUser } from "../supabase/auth";
 
 

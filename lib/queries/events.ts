@@ -5,15 +5,13 @@ import type { Event, Code } from '@/types/database'
 
 const SUPABASE_NO_ROWS_ERROR = 'PGRST116'
 
-export async function getEventsForUser(): Promise<Event[]> {
+export async function getEventsForUser(userId: string): Promise<Event[]> {
   const client = await createSupabaseServerClient();
 
   const { data: session } = await client.auth.getSession();
   if (!session?.session?.user) {
     return [];
   }
-
-  const userId = session.session.user.id;
 
   const { data, error } = await client
     .from('events')

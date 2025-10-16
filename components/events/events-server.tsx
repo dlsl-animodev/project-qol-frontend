@@ -1,5 +1,6 @@
 "use server";
 
+import { requireUser } from "@/lib/supabase/auth";
 /*
     THIS COMPONENT IS FOR SERVER SIDE RENDERING OF EVENTS
 
@@ -16,8 +17,15 @@ import EventCard from "./event-card";
 import { getEventsForUser } from "@/lib/queries/events";
 import { Event } from "@/types/database";
 
-async function EventsServer() {
-    const events: Event[] = await getEventsForUser();
+export interface EventsServerProps {
+    eventUserId?: string;
+}
+
+async function EventsServer({ eventUserId }: EventsServerProps) {
+    const user = await requireUser();
+    const userId = eventUserId || user.id;
+
+    const events: Event[] = await getEventsForUser(userId);
 
     if (events.length === 0) {
         return (
