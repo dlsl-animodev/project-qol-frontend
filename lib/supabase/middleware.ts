@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { UserAppMetadata, UserMetadata } from '@supabase/supabase-js'
 import { NextResponse, type NextRequest } from 'next/server'
+import { getUserRole } from '../queries/user'
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -54,43 +55,9 @@ export async function updateSession(request: NextRequest) {
   const isAdminPath = pathname === '/admin' || pathname.startsWith('/admin/')
 
   if (user && isAdminPath) {
-    // Only fetch the full user object when necessary (for admin routes)
-    const { data: userData } = await supabase.auth.getUser();
-    const supaUser = userData?.user;
-
-    // No user? Redirect to sign-in
-    if (!supaUser) {
-      const url = request.nextUrl.clone()
-      url.pathname = '/sign-in'
-      return NextResponse.redirect(url)
-    }
-
-    const isAdmin = (() => {
-      // Look across common places teams store roles
-      const appMeta: UserAppMetadata = supaUser?.app_metadata || {}
-      const userMeta: UserMetadata = supaUser?.user_metadata || {}
-      const candidates: unknown[] = [
-        appMeta.role,
-        appMeta.roles,
-        userMeta.role,
-        userMeta.roles,
-        userMeta.is_admin,
-        appMeta.user_role,
-        userMeta.user_role,
-      ].filter((v) => v !== undefined && v !== null)
-
-      console.log('Role candidates:', candidates)
-      console.log('App metadata:', appMeta)
-      console.log('User metadata:', userMeta)
-
-      return candidates.some((v) => {
-        if (typeof v === 'string') return v.toLowerCase() === 'admin'
-        if (Array.isArray(v)) return v.map(String).map((s) => s.toLowerCase()).includes('admin')
-        if (typeof v === 'boolean') return v === true
-        return false
-      })
-    })()
-
+    const userRole = await getUserRole();
+    const isAdmin = userRole === 'admin';
+    
     if (!isAdmin) {
       // Logged-in but not an admin: redirect to a safe page, preserve cookies
       const url = request.nextUrl.clone()

@@ -38,3 +38,5 @@ export interface StudentInfo {
   card_tag?: number
   guest_fullname?: string
 }
+
+export type UserRole = 'admin' | 'user';
