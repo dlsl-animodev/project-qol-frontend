@@ -21,3 +21,18 @@ export async function getUserRole(): Promise<UserRole> {
 
     return data.role as UserRole;
 }
+
+export async function getUsers(page: number = 1, pageSize: number = 10): Promise<{ users: any[]; total: number }> {
+    const supabase = await createSupabaseServerClient();
+    
+    const { data, error, count } = await supabase
+        .from('users')
+        .select('*', { count: 'exact' })
+        .range((page - 1) * pageSize, page * pageSize - 1);
+
+    if (error) {
+        throw new Error(`Error fetching users: ${error.message}`);
+    }
+
+    return { users: data || [], total: count || 0 };
+}

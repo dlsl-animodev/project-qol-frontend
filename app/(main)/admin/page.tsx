@@ -10,7 +10,15 @@ import {
 import OrganizationsServer from "@/components/organizations/organizations-server";
 import { Suspense } from "react";
 
-async function AdminPage() {
+type AdminPageProps = {
+    searchParams?: { [key: string]: string | string[] | undefined };
+};
+
+async function AdminPage({ searchParams }: AdminPageProps) {
+    const pageParam = typeof searchParams?.page === "string" ? parseInt(searchParams!.page) : 1;
+    const page = Number.isNaN(pageParam) || pageParam < 1 ? 1 : pageParam;
+
+
     return (
         <>
             <TypingAnimationBackgroundContainer>
@@ -22,9 +30,7 @@ async function AdminPage() {
             <PageContainer>
                 {/* JUST A CUSTOM NOTE  */}
 
-                <div className="bg-accent px-4 py-1 text-xs rounded-md text-accent-foreground font-bold">
-                    THIS IS THE VIEW OF THE ADMINS
-                </div>
+                <div className="bg-accent px-4 py-1 text-xs rounded-md text-accent-foreground font-bold">THIS IS THE VIEW OF THE ADMINS</div>
 
                 <PageContentHeader
                     title="Organizations in Dashboard"
@@ -33,7 +39,7 @@ async function AdminPage() {
                 <PageContentMain>
                     {/* ORGANIZATIONS  */}
                     <Suspense fallback={<div>Loading organizations...</div>}>
-                        <OrganizationsServer />
+                        <OrganizationsServer page={page} pageSize={9} />
                     </Suspense>
                 </PageContentMain>
             </PageContainer>
