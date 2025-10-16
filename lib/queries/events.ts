@@ -5,6 +5,7 @@ import type { Event, Code } from '@/types/database'
 
 const SUPABASE_NO_ROWS_ERROR = 'PGRST116'
 
+
 export async function getEventByCode(eventCode: string, client: Supabase): Promise<Event | null> {
   const { data, error } = await client
     .from('events')
