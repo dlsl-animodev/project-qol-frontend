@@ -26,21 +26,7 @@ export async function getEventsForUser(userId: string): Promise<Event[]> {
   return data as Event[];
 }
 
-export async function getEventByCode(eventCode: string, client: Supabase): Promise<Event | null> {
-  const { data, error } = await client
-    .from('events')
-    .select('*')
-    .eq('event_code', eventCode)
-    .single()
 
-  if (error) {
-    if (error.code === SUPABASE_NO_ROWS_ERROR) return null
-    console.error('Error fetching event:', error)
-    return null
-  }
-
-  return data as Event
-}
 
 export async function getEventById(eventId: string, client: Supabase): Promise<Event | null> {
   const { data, error } = await client

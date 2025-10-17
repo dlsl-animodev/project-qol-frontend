@@ -32,3 +32,16 @@ export async function requireUser(): Promise<User> {
 
   return user
 }
+
+export async function requireAdmin(): Promise<User> {
+  const user = await requireUser();
+
+  const { getUserRole } = await import('../queries/user');
+  const role = await getUserRole();
+
+  if (role !== 'admin') {
+    redirect('/home?error=forbidden');
+  }
+
+  return user;
+}
