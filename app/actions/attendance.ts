@@ -19,7 +19,7 @@ export async function recordAttendance(
   error?: string
   attendance?: Attendance
   student?: StudentInfo
-  event?: { id: string; name: string; code: string; date: string }
+  event?: { id: string; name: string; date: string }
 }> {
   try {
     await requireUser()
@@ -87,7 +87,6 @@ export async function recordAttendance(
       event: {
         id: validation.event.id,
         name: validation.event.event_name,
-        code: validation.event.event_code,
         date: validation.event.event_date
       }
     }
