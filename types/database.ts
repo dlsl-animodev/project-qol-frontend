@@ -2,7 +2,6 @@ export interface Event {
   id: string;
   user_id: string;
   event_name: string;
-  event_code: string;
   event_date: string;
   description: string | null;
   created_at: string;
