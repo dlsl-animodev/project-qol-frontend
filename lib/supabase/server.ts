@@ -29,8 +29,27 @@ export function createClient() {
   )
 }
 
+// Supabase client with service role privileges to bypass RLS policies (for admin operations)
+
+export function createSupabaseServiceClient() {
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!serviceRoleKey) {
+    throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY environment variable');
+  }
 
 
+  return createServerClient(
+    supabaseUrl,
+    serviceRoleKey,
+    {
+      cookies: {
+        getAll: () => [],
+        setAll: () => {},
+      },
+    }
+  );
+}
 
 export async function createSupabaseServerClient() {
   const cookieStore = await cookies()
