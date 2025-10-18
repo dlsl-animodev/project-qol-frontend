@@ -37,6 +37,7 @@ async function OrganizationsServer({ page = 1, pageSize = 9 }: OrganizationsServ
                     return (
                         <OrganizationCard
                             id={id}
+                            userId={id}
                             key={id || name}
                             name={name}
                             description={description}

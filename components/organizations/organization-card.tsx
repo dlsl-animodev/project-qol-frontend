@@ -14,6 +14,7 @@ import {
 
 interface OrganizationCardProps {
     id: string;
+    userId: string;
     name: string;
     description: string;
     pastEvents: number;

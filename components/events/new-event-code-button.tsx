@@ -16,7 +16,7 @@ import { Plus } from "lucide-react";
 import React from "react";
 
 const NewEventCodeButton: React.FC<
-    React.ComponentProps<typeof Button> 
+    React.ComponentProps<typeof Button>
 > = (props) => {
     const newEventCodeHandler = async (e: React.FormEvent) => {
         e.preventDefault();
