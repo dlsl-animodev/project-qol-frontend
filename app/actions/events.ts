@@ -3,10 +3,13 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { createSupabaseServerClient, createSupabaseServiceClient } from '@/lib/supabase/server';
 import { requireUser, requireAdmin } from '@/lib/supabase/auth';
 import type { Event, Code } from '@/types/database';
 
+// admin creates event for an organization
+// Auto-generates a unique event code
+// Uses service role to bypass RLS policies
 
 export async function createEvent(eventData: {
   event_name: string;
@@ -23,25 +26,30 @@ export async function createEvent(eventData: {
   try {
 
     const user = await requireAdmin();
-    const supabase = await createSupabaseServerClient();
+    // use service role client to bypass RLS when creating events for organizations
+    const supabase = createSupabaseServiceClient();
 
     const assignedUserId = eventData.user_id || user.id;
 
-    const { data: targetUser, error: userError } = await supabase.auth.admin.getUserById(assignedUserId);
-    if (userError || !targetUser) {
+    // balidate UUID format for assigned user
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(assignedUserId)) {
       return {
         success: false,
-        error: 'Target user not found. Please verify the organization user ID.'
+        error: 'Invalid user ID format.'
       };
     }
 
     const generateCode = () => {
-      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-      let code = '';
-      for (let i = 0; i < 8; i++) {
-        code += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      return code;
+      const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        let result = "";
+        const charactersLength = characters.length;
+        for (let i = 0; i < 6; i++) {
+            result += characters.charAt(
+                Math.floor(Math.random() * charactersLength)
+            );
+        }
+        return result;
     };
 
     let code = '';
@@ -101,7 +109,7 @@ export async function createEvent(eventData: {
     const { data: codeEntry, error: codeError } = await supabase
       .from('codes')
       .insert({
-        code,
+        code: code,
         event_id: event.id,
         is_active: true,
         expires_at: expiresAt.toISOString()
@@ -109,25 +117,30 @@ export async function createEvent(eventData: {
       .select()
       .single();
 
-    if (codeError) {
-      console.error('Error creating code entry:', codeError);
-      console.warn('Event created but code entry failed. Admins, manually create a code entry.');
+    if (codeError || !codeEntry) {
+      console.error('Error creating code:', codeError);
+
+      return {
+        success: false,
+        error: codeError?.message || 'Event created but failed to generate code'
+      };
     }
 
     revalidatePath('/admin');
     revalidatePath('/home');
+    revalidatePath(`/events/${assignedUserId}`);
 
     return {
       success: true,
-      event: event as Event,
-      code: codeEntry as Code,
-      message: `Event created successfully with code: ${code}`
+      event: event,
+      code: codeEntry,
+      message: `Event "${eventData.event_name}" created with code: ${code}`
     };
   } catch (error) {
-    console.error('Unexpected error:', error);
+    console.error('Error in createEvent:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'An error occurred'
     };
   }
 }

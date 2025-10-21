@@ -1,6 +1,6 @@
 "use server";
 
-import GenerateCodeButton from "@/components/events/generate-code-button";
+import CreateEventButton from "@/components/events/create-event-button";
 import {
     PageContainer,
     PageContentHeader,
@@ -13,9 +13,9 @@ import { getUserData } from "@/lib/queries/user";
 async function OrganizationEventsPage({
     params,
 }: {
-    params: { orgId: string };
+    params: Promise<{ orgId: string }>;
 }) {
-    const { orgId } = params;
+    const { orgId } = await params;
 
     const orgData = await getUserData(orgId);
 
@@ -28,7 +28,12 @@ async function OrganizationEventsPage({
 
             <PageContentMain>
                 <Suspense>
-                    <GenerateCodeButton variant={"primary"} className="self-start mb-4" />
+                    <CreateEventButton 
+                        userId={orgId} 
+                        organizationName={orgData?.full_name || orgData?.name}
+                        variant="primary"
+                        className="mb-4"
+                    />
                     {/* EVENTS  */}
                     <EventsServer eventUserId={orgId} />
                 </Suspense>
