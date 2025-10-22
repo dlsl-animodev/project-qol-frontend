@@ -19,7 +19,7 @@ import { Home, Lock, Menu } from "lucide-react";
 
 export interface HeaderProps {
     user: User | null;
-    className: string;
+    className?: string;
 }
 
 const BASE_HEADER_CLASSNAME =
