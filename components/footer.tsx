@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const Footer = () => {
     return (
-        <footer className="bg-secondary text-secondary-foreground flex justify-between p-6 px-20">
+        <footer className="bg-secondary text-secondary-foreground flex justify-between p-6 px-10 md:px-20">
             <section className="space-y-4 max-w-sm">
                 <div className="flex items-center gap-2">
                     <Image
@@ -16,7 +16,7 @@ const Footer = () => {
                         height={30}
                         className="w-auto h-auto"
                     />
-                    <Subtitle> ANIMO DEV </Subtitle>
+                    <Subtitle> ANIMO.DEV </Subtitle>
                 </div>
                 <p>© 2025 Animo Dev Society. All rights reserved.</p>
                 <ul>
