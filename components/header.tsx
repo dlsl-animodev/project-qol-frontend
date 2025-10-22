@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { getCurrentUser } from "@/lib/supabase/auth";
 import { signOut } from "@/app/actions/auth";
+import ANIMODEVLOGO from "@/public/images/animo-dev-logo.jpg";
+import Image from "next/image";
 
 const Header = async () => {
     const user = await getCurrentUser();
@@ -15,17 +17,26 @@ const Header = async () => {
             "
         >
             {/* Left Section */}
-            <section className="flex justify-start gap-14">
-                <Link href="/">
-                    <p className="font-bold">ANIMO.DEV</p>
-                </Link>
+            <section className="flex items-center justify-start gap-14">
+                <div className="flex items-center gap-2">
+                    <Image 
+                        src={ANIMODEVLOGO}
+                        alt="Animo.dev Logo"
+                        width={30}
+                        height={30}
+                        className="w-auto h-auto"
+                    />
+                    <Link href="/">
+                        <p className="font-bold">ANIMO.DEV</p>
+                    </Link>
+                </div>
                 <nav>
                     <ul className="flex gap-6">
                         <li>
                             <Link href="/home"> Home </Link>
                         </li>
                         <li>
-                            <Link href={'/admin'}> Admin </Link>
+                            <Link href={"/admin"}> Admin </Link>
                         </li>
                     </ul>
                 </nav>
