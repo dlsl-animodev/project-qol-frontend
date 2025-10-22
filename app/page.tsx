@@ -156,13 +156,13 @@ const LandingPage = () => {
                 </div>
 
                 <SplitTextLocal
-                    className="text-8xl font-bold font-pixel text-center"
+                    className="text-5xl md:text-8xl font-bold font-pixel text-center"
                     type="chars"
                 >
                     EFFORTLESS EVENT ATTENDANCE
                 </SplitTextLocal>
                 <SplitTextLocal
-                    className="text-center text-lg w-[50%]"
+                    className="text-center text-sm md:text-lg w-[90%] md:w-[50%]"
                     stagger={0.005}
                     type="lines"
                     delay={1}
@@ -183,7 +183,7 @@ const LandingPage = () => {
             </section>
 
             {/* PROCESS  */}
-            <section className="grid grid-cols-2 items-center bg-accent">
+            <section className="grid grid-cols-1 md:grid-cols-2 items-center bg-accent">
                 <div ref={processTextRef}>
                     <SplitTextLocal
                         play={processInView}
@@ -191,7 +191,7 @@ const LandingPage = () => {
                         stagger={0.04}
                         className="w-full"
                     >
-                        <h2 className="font-bold font-pixel text-left text-6xl text-background  ml-[4rem]">
+                        <h2 className="font-bold font-pixel text-center md:text-left text-3xl md:text-6xl text-background md:ml-[4rem]">
                             Managing event attendance should not be a hassle
                         </h2>
                     </SplitTextLocal>
@@ -205,19 +205,19 @@ const LandingPage = () => {
                         id="front-card-view"
                         ref={frontCardRef}
                     >
-                        <h3 className="font-pixel text-8xl">Old Way</h3>
+                        <h3 className="font-pixel text-6xl md:text-8xl">Old Way</h3>
                         <ul className="flex flex-col gap-2">
-                            <li className="  px-4 py-2 text-xl font-bold rounded-xl flex items-center gap-2">
+                            <li className="  px-4 py-2 text-base md:text-xl font-bold rounded-xl flex items-center gap-2">
                                 <X />
                                 Manual signing sheets cause long lines and
                                 errors.
                             </li>
-                            <li className="  px-4 py-2 text-xl font-bold rounded-xl flex items-center gap-2">
+                            <li className="  px-4 py-2 text-base md:text-xl font-bold rounded-xl flex items-center gap-2">
                                 <X />
                                 Organizers spend long checking and encoding
                                 attendance.
                             </li>
-                            <li className="  px-4 py-2 text-xl font-bold rounded-xl flex items-center gap-2">
+                            <li className="  px-4 py-2 text-base md:text-xl font-bold rounded-xl flex items-center gap-2">
                                 <X />
                                 Students can not easily verify if they were
                                 marked present.
@@ -229,19 +229,19 @@ const LandingPage = () => {
                         id="back-card-view"
                         ref={backCardRef}
                     >
-                        <h3 className="font-pixel text-8xl">New Way</h3>
+                        <h3 className="font-pixel text-6xl md:text-8xl">New Way</h3>
                         <ul>
-                            <li className="px-4 py-2 text-xl font-bold rounded-xl flex items-center gap-2">
+                            <li className="px-4 py-2 text-base md:text-xl font-bold rounded-xl flex items-center gap-2">
                                 <Check />
                                 Students just tap their ID on the device, quick
                                 and contactless.
                             </li>
-                            <li className="px-4 py-2 text-xl font-bold rounded-xl flex items-center gap-2">
+                            <li className="px-4 py-2 text-base md:text-xl font-bold rounded-xl flex items-center gap-2">
                                 <Check />
                                 Attendance logs are automatically saved and
                                 updated online.
                             </li>
-                            <li className="px-4 py-2 text-xl font-bold rounded-xl flex items-center gap-2">
+                            <li className="px-4 py-2 text-base md:text-xl font-bold rounded-xl flex items-center gap-2">
                                 <Check />
                                 Students and clubs can view records anytime
                                 through the website.
@@ -260,13 +260,13 @@ const LandingPage = () => {
                 >
                     HOW IT WORKS
                 </SplitTextLocal>
-                <div className="grid grid-cols-3 px-[5rem] gap-[5rem]">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-[2rem] md:px-[5rem] gap-[2rem] md:gap-[5rem]">
                     <SplitTextLocal
                         play={howItWorksInView}
                         delay={0.5}
                         type="lines"
                     >
-                        <div className="bg-primary flex items-center justify-center rounded-lg  flex-col  p-4 py-8 space-y-4">
+                        <div className="bg-primary flex items-center justify-center rounded-lg flex-col p-4 py-8 space-y-4">
                             <Ellipsis
                                 size={70}
                                 className="bg-secondary p-2 rounded-lg"
@@ -319,14 +319,14 @@ const LandingPage = () => {
             {/* FOOTER CTA  */}
             <section
                 ref={footerRef}
-                className="flex flex-col items-center  h-[calc(100vh-10rem)] pt-[10rem] justify-center"
+                className="flex flex-col items-center  h-[calc(100vh-10rem)] pt-[10rem] justify-center px-[2rem]"
             >
                 <SplitTextLocal
                     play={footerInView}
                     type="chars"
                     className="w-full text-center"
                 >
-                    <h2 className="font-bold font-pixel text-6xl">
+                    <h2 className="font-bold font-pixel text-5xl md:text-6xl">
                         Ready to streamline your events?
                     </h2>
                 </SplitTextLocal>
@@ -335,7 +335,7 @@ const LandingPage = () => {
                     stagger={0.06}
                     delay={1}
                     type="lines"
-                    className="text-lg"
+                    className="text-lg text-center"
                 >
                     Join other organizations in making event check-ins and outs
                     effortless. Requests your event code today and experience
