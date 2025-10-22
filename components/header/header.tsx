@@ -19,34 +19,24 @@ import { Home, Lock, Menu } from "lucide-react";
 
 export interface HeaderProps {
     user: User | null;
+    className: string;
 }
+
+const BASE_HEADER_CLASSNAME =
+    "h-12 px-6 text-primary-foreground fixed shadow-xl border-b w-full z-50 backdrop-blur-md bg-primary/50";
 
 const Header = ({ user }: HeaderProps) => {
     const isTablet = useIsTablet();
 
-    const renderHeader = () => {
-        if (isTablet) return <TabletHeader user={user} />;
-        return <DesktopHeader user={user} />;
-    }
-
-    return (
-        <header
-            className="
-                flex justify-between items-center h-12 px-6 text-primary-foreground 
-                fixed shadow-xl border-b w-full z-50
-                backdrop-blur-md  bg-primary/50
-            "
-        >
-            {renderHeader()}
-        </header>
-    );
+    if (isTablet) return <TabletHeader user={user} className="flex items-center justify-between" />;
+    return <DesktopHeader user={user} className="grid grid-cols-3 items-center text-center" />;
 };
 
 export default Header;
 
-const TabletHeader = ({ user }: HeaderProps) => {
+const TabletHeader = ({ user, className }: HeaderProps) => {
     return (
-        <>
+        <header className={`${BASE_HEADER_CLASSNAME} ${className}`}>
             {/* Left Section */}
             <section className="flex items-center justify-start gap-14">
                 <div className="flex items-center gap-3">
@@ -109,13 +99,13 @@ const TabletHeader = ({ user }: HeaderProps) => {
                     </DropdownMenuContent>
                 </DropdownMenu>
             </section>
-        </>
+        </header>
     );
 };
 
-const DesktopHeader = ({ user }: HeaderProps) => {
+const DesktopHeader = ({ user, className }: HeaderProps) => {
     return (
-        <>
+        <header className={`${BASE_HEADER_CLASSNAME} ${className}`}>
             {/* Left Section */}
             <section className="flex items-center justify-start gap-14">
                 <div className="flex items-center gap-2">
@@ -166,6 +156,6 @@ const DesktopHeader = ({ user }: HeaderProps) => {
                     </Button>
                 )}
             </section>
-        </>
+        </header>
     );
 };
