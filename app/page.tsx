@@ -1,7 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Check, RectangleEllipsis, X } from "lucide-react";
+import {
+    AppWindowMac,
+    Check,
+    Ellipsis,
+    RectangleEllipsis,
+    Scan,
+    X,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRef } from "react";
 import gsap from "gsap";
@@ -23,6 +30,8 @@ const LandingPage = () => {
     const flipContainerRef = useRef<HTMLDivElement | null>(null);
     const footerRef = useRef<HTMLElement | null>(null);
     const [footerInView, setFooterInView] = useState(false);
+    const howItWorksRef = useRef<HTMLDivElement | null>(null);
+    const [howItWorksInView, setHowItWorksInView] = useState(false);
 
     useEffect(() => {
         // Use ScrollTrigger to control the flip animation tied to scroll.
@@ -104,6 +113,25 @@ const LandingPage = () => {
             ([entry]) => {
                 if (entry.isIntersecting) {
                     setProcessInView(true);
+                    obs.unobserve(el);
+                }
+            },
+            { threshold: 0.15 }
+        );
+
+        obs.observe(el);
+        return () => obs.disconnect();
+    }, []);
+
+    // create an observer and set howItWorksInView to true when in view
+    useEffect(() => {
+        const el = howItWorksRef.current;
+        if (!el) return;
+
+        const obs = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setHowItWorksInView(true);
                     obs.unobserve(el);
                 }
             },
@@ -224,15 +252,69 @@ const LandingPage = () => {
             </section>
 
             {/* HOW IT WORKS  */}
-            <section>
-                <h2 className="font-bold font-pixel text-center text-4xl">
-                    <div className="grid grid-cols-3">
-                        <section></section>
-                        <section></section>
-                        <section></section>
-                    </div>
-                </h2>
-            </section>
+            <div className="pt-[10rem]" ref={howItWorksRef}>
+                <SplitTextLocal
+                    className="font-bold font-pixel text-center text-6xl mb-8"
+                    play={howItWorksInView}
+                    type="chars"
+                >
+                    HOW IT WORKS
+                </SplitTextLocal>
+                <div className="grid grid-cols-3 px-[5rem] gap-[5rem]">
+                    <SplitTextLocal
+                        play={howItWorksInView}
+                        delay={0.5}
+                        type="lines"
+                    >
+                        <div className="bg-primary flex items-center justify-center rounded-lg  flex-col  p-4 py-8 space-y-4">
+                            <Ellipsis
+                                size={70}
+                                className="bg-secondary p-2 rounded-lg"
+                            />
+                            <div>
+                                <p className="text-lg font-bold">
+                                    1. Get a code for your event
+                                </p>
+                                <p className="text-center">
+                                    You can get your code once you log in
+                                </p>
+                            </div>
+                        </div>
+                    </SplitTextLocal>
+                    <SplitTextLocal play={howItWorksInView} delay={0.5}>
+                        <div className="bg-primary flex items-center justify-center rounded-lg  flex-col   p-4 py-8 space-y-4">
+                            <Scan
+                                size={70}
+                                className="bg-secondary p-2 rounded-lg"
+                            />
+                            <div>
+                                <p className="text-lg font-bold">
+                                    2. Use the Iot device to scan IDs
+                                </p>
+                                <p className="text-center">
+                                    You can get your code once you log in
+                                </p>
+                            </div>
+                        </div>
+                    </SplitTextLocal>
+                    <SplitTextLocal play={howItWorksInView} delay={0.5}>
+                        <div className="bg-primary flex items-center justify-center rounded-lg  flex-col  p-4 py-8 space-y-4">
+                            <AppWindowMac
+                                size={70}
+                                className="bg-secondary p-2 rounded-lg"
+                            />
+                            <div>
+                                <p className="text-lg font-bold">
+                                    3. View records online
+                                </p>
+                                <p className="text-center">
+                                    You can get your code once you log in
+                                </p>
+                            </div>
+                        </div>
+                    </SplitTextLocal>
+                </div>
+            </div>
 
             {/* FOOTER CTA  */}
             <section
@@ -242,7 +324,6 @@ const LandingPage = () => {
                 <SplitTextLocal
                     play={footerInView}
                     type="chars"
-                    stagger={0.06}
                     className="w-full text-center"
                 >
                     <h2 className="font-bold font-pixel text-6xl">
