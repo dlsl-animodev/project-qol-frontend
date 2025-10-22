@@ -17,13 +17,13 @@ const HeroSection = () => {
                 <h1>EFFORTLESS EVENT ATTENDANCE</h1>
             </SplitTextLocal>
             <SplitTextLocal
-                className="text-center text-sm md:text-lg w-[90%] md:w-[70%] break-normal"
+                className="text-center text-sm md:text-lg w-[90%] md:w-[70%] "
                 stagger={0.005}
                 type="lines"
                 delay={1}
             >
-                Tired of manual event check-ins and check-outs tracking? Project
-                QOL provides a seamless, IOT-powered solution for managing event
+                Tired of manual event check-ins and check-outs tracking? <br /> Project
+                QOL provides a seamless, IOT-powered solution <br /> for managing event
                 check-ins and check outs with a simple ID scan
             </SplitTextLocal>
             <SplitTextLocal delay={1.5}>

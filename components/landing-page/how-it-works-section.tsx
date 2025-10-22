@@ -14,7 +14,7 @@ const HOW_IT_WORKS_STEPS = [
         icon: <Scan size={70} className="bg-secondary p-2 rounded-lg" />,
     },
     {
-        title: "3. View records online",
+        title: "3. View the records online",
         description: "You can get your code once you log in",
         icon: (
             <AppWindowMac size={70} className="bg-secondary p-2 rounded-lg" />
@@ -34,21 +34,20 @@ const HowItWorksSection = () => {
                             HOW IT WORKS
                         </h2>
                     </SplitTextLocal>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-[2rem] md:px-[5rem] gap-[2rem] md:gap-[5rem]">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 px-[2rem] md:px-[2rem] lg:px-[5rem] gap-[2rem] md:gap-[2rem] lg:gap-[5rem] ">
                         {HOW_IT_WORKS_STEPS.map((step, index) => (
                             <SplitTextLocal
                                 key={index}
                                 play={howItWorksInView}
-                                delay={(index + 1) * 0.3}
+                                delay={(index + 1) * 0.5}
+                                className={` bg-primary flex items-center justify-center rounded-lg flex-col p-4 py-8 space-y-4 shadow border ${index === 2 ? 'sm:col-span-2 md:col-span-1' : ''}`}
                             >
-                                <div className="bg-primary flex items-center justify-center rounded-lg flex-col p-4 py-8 space-y-4 shadow border">
-                                    {step.icon}
-                                    <div>
-                                        <p className="text-lg font-bold">
-                                            {step.title}
-                                        </p>
-                                        <p>{step.description}</p>
-                                    </div>
+                                {step.icon}
+                                <div>
+                                    <p className="text-lg font-bold">
+                                        {step.title}
+                                    </p>
+                                    <p>{step.description}</p>
                                 </div>
                             </SplitTextLocal>
                         ))}

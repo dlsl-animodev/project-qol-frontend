@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const Footer = () => {
     return (
-        <footer className="bg-secondary text-secondary-foreground flex justify-between p-6 px-10 md:px-20">
+        <footer className="bg-secondary text-secondary-foreground flex justify-between p-6 px-10 md:px-20 text-xs">
             <section className="space-y-4 max-w-sm">
                 <div className="flex items-center gap-2">
                     <Image
@@ -37,9 +37,9 @@ const Footer = () => {
 
             <section className="flex gap-20">
                 <div>
-                    <p className="font-semibold"> Site Map </p>
+                    <p className="font-semibold mb-2"> Site Map </p>
                     <nav>
-                        <ul>
+                        <ul className="space-y-2">
                             <li>
                                 <Link href="/home"> Home </Link>
                             </li>
@@ -50,9 +50,9 @@ const Footer = () => {
                     </nav>
                 </div>
                 <div>
-                    <p className="font-semibold"> Legal </p>
+                    <p className="font-semibold mb-2"> Legal </p>
                     <nav>
-                        <ul>
+                        <ul className="space-y-2">
                             <li> Privacy </li>
                             <li> Terms </li>
                         </ul>

@@ -2,6 +2,7 @@
 
 import SplitTextLocal from "../interactive/split-text-local";
 import { Check, LucideProps, X } from "lucide-react";
+import { twMerge } from "tailwind-merge";
 
 import gsap from "gsap";
 import {
@@ -99,7 +100,7 @@ const ProblemSolutionSection = () => {
                             stagger={0.04}
                             className="w-full"
                         >
-                            <h2 className="font-bold font-pixel text-center md:text-left text-5xl lg:text-6xl text-background md:ml-[4rem] mt-[3rem] md:mt-[0rem] mx-4">
+                            <h2 className="font-bold font-pixel text-center md:text-left text-5xl sm:text-4xl lg:text-6xl text-background md:ml-[4rem] mt-[3rem] md:mt-[0rem] mx-4">
                                 Managing event attendance should not be a hassle
                             </h2>
                         </SplitTextLocal>
@@ -144,16 +145,17 @@ const CardView: React.FC<CardViewProps> = ({
     ref,
     title,
     points,
+    id,
     icon: Icon,
     className,
 }) => {
     return (
         <section
-            className={`flex flex-col items-center m-10 rounded-xl p-4 absolute backface-hidden rotate-y-180 w-[90%] ${className}`}
-            id="back-card-view"
+            className={twMerge(`flex flex-col items-center m-10 rounded-xl p-4 absolute backface-hidden rotate-y-180 w-[90%]`, className)}
+            id={id}
             ref={ref}
         >
-            <h3 className="font-pixel text-7xl md:text-6xl lg:text-7xl xl:text-8xl">
+            <h3 className="font-pixel text-6xl md:text-6xl lg:text-7xl xl:text-8xl">
                 {title}
             </h3>
             <ul>
