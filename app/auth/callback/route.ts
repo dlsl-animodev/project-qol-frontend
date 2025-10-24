@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
 
   // Extract auth code and optional redirect path
   const code = searchParams.get("code");
-  const redirectTo = searchParams.get("redirectTo") ?? "/";
+  const redirectTo = searchParams.get("redirectTo") ?? "/home";
 
   if (code) {
     const supabase = await createSupabaseServerClient();

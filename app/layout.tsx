@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/header";
+import HeaderServer from "@/components/header/header-server";
 import Footer from "@/components/footer";
  import NextTopLoader from 'nextjs-toploader';
 
@@ -49,7 +49,7 @@ export default function RootLayout({
             >
                 <NextTopLoader />
 
-                <Header />
+                <HeaderServer />
                 <main className="min-h-screen">
                     <div className="h-12 bg-primary" />
                     <Suspense>

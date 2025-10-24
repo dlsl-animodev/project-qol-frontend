@@ -8,6 +8,7 @@ import DisplayScreen from "./display-screen";
 import ErrorScreen from "./error-screen";
 import { gsap } from "gsap";
 import { toast } from "sonner";
+import { recordAttendance } from "@/app/actions/attendance";
 
 import "./event-style.css";
 
@@ -31,6 +32,10 @@ export function EventScreen() {
     const [studentId, setStudentId] = useState<string>('');
     const [studentData, setStudentData] = useState<StudentApiResponse | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
+
+    // event code state for backend attendance logging
+    const [eventCode, setEventCode] = useState<string>('');
+    const [isCodeSet, setIsCodeSet] = useState<boolean>(false);
 
     const idleRef = useRef<HTMLDivElement>(null);
     const typingRef = useRef<HTMLDivElement>(null);
@@ -116,6 +121,24 @@ export function EventScreen() {
         gsap.set([typingRef.current, loadingRef.current, displayRef.current, errorRef.current], { autoAlpha: 0, clipPath: '' });
     }, []);
 
+    // prompt for event code when page loads
+    useEffect(() => {
+        if (!isCodeSet && !eventCode) {
+            const code = window.prompt('Enter Event Code:');
+            if (code && code.trim()) {
+                setEventCode(code.toUpperCase().trim());
+                setIsCodeSet(true);
+                toast.success('Event code set!', {
+                    description: `Ready to scan for: ${code.toUpperCase().trim()}`
+                });
+            } else {
+                toast.error('Event code required!', {
+                    description: 'Please refresh and enter a valid code'
+                });
+            }
+        }
+    }, [isCodeSet, eventCode]);
+
     useEffect(() => {
         if (prevStateRef.current === appState) return;
 
@@ -145,60 +168,57 @@ export function EventScreen() {
     }, [appState, stateRefs, animateIn, animateOut]);
 
 
-    const startAttendance = useCallback((id: string) => {
+    const startAttendance = useCallback(async (id: string) => {
         setAppState(AppState.Loading);
 
-        // API: https://project-qol-backend.onrender.com/api/student?id=123456789
-        const apiUrl = `https://project-qol-backend.onrender.com/api/student?id=${id}`;
         // Increment and capture a request sequence number
         const requestId = ++latestRequestIdRef.current;
 
-        fetch(apiUrl)
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status} ${response.statusText}`);
-                }
-                return response.json();
-            })
-            .then((data: StudentApiResponse | null) => {
-                if (!data) {
-                    throw new Error('No student data found');
-                }
+        try {
+            // call backend server action to record attendance
+            const result = await recordAttendance(id, eventCode);
 
-                if (data.error) {
-                    throw new Error(data.error);
-                }
+            if (!result.success) {
+                throw new Error(result.message || result.error || 'Attendance failed');
+            }
 
-                if (!data.email_address) {
-                    throw new Error('Student email not found');
-                }
+            toast.success("Attendance recorded", {
+                description: `${result.student?.email_address || 'Unknown'} • ${result.student?.partner_id || id}`,
+            });
 
-                // Always show a toast for any successful scan
-                toast.success("Attendance recorded", {
-                    description: `${data.email_address || 'Unknown'} • ${data.partner_id || id}`,
+            // Only update the main display if this is the latest successful request
+            if (latestRequestIdRef.current === requestId) {
+                // Convert backend result to match StudentApiResponse format
+                setStudentData({
+                    email_address: result.student?.email_address || '',
+                    department: result.student?.department || '',
+                    partner_id: result.student?.partner_id || id,
                 });
 
-                // Only update the main display if this is the latest successful request
-                if (latestRequestIdRef.current === requestId) {
-                    setStudentData(data);
-                    // Transition to display after a short delay, then back to idle
-                    scheduleTimeout(() => setAppState(AppState.Display), 1000);
-                    scheduleTimeout(() => setAppState(AppState.Idle), 3500);
-                }
-            })
-            .catch((error) => {
-                console.error('Error fetching API:', error);
-                toast.error("Attendance error", { description: String(error) });
-                if (latestRequestIdRef.current === requestId) {
-                    setErrorMessage(String(error));
-                    scheduleTimeout(() => setAppState(AppState.Error), 50);
-                    scheduleTimeout(() => setAppState(AppState.Idle), 2500);
-                }
-            });
-    }, [scheduleTimeout]);
+                // Transition to display after a short delay, then back to idle
+                scheduleTimeout(() => setAppState(AppState.Display), 1000);
+                scheduleTimeout(() => setAppState(AppState.Idle), 3500);
+            }
+        } catch (error) {
+            console.error('Error recording attendance:', error);
+            toast.error("Attendance error", { description: String(error) });
+
+            if (latestRequestIdRef.current === requestId) {
+                setErrorMessage(String(error));
+                scheduleTimeout(() => setAppState(AppState.Error), 50);
+                scheduleTimeout(() => setAppState(AppState.Idle), 2500);
+            }
+        }
+    }, [eventCode, scheduleTimeout]);
 
     useEffect(() => {
         const handleKeyPress = (event: KeyboardEvent) => {
+            // prevent input if event code is not set
+            if (!isCodeSet) {
+                toast.warning('Please set event code first!');
+                return;
+            }
+
             // Handle delete
             if (event.key === 'Backspace') {
                 studentIdRef.current = studentIdRef.current.slice(0, -1);
@@ -240,7 +260,7 @@ export function EventScreen() {
             window.removeEventListener('keydown', handleKeyPress);
             timeoutIdsRef.current.forEach((id) => clearTimeout(id));
         };
-    }, [startAttendance]);
+    }, [startAttendance, isCodeSet]);
 
     return (
         <main

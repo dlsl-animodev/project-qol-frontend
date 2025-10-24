@@ -1,37 +1,43 @@
 // API Route: GET /api/events
-// get all events or specific event by code
+// Get all events (optionally filtered by user_id)
 
-import { NextRequest, NextResponse } from 'next/server'
-import { getAllEvents, getEventByCode } from '@/lib/queries/events'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { NextRequest, NextResponse } from 'next/server';
+import { getAllEvents } from '@/lib/queries/events';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createSupabaseServerClient();
 
-    const searchParams = request.nextUrl.searchParams
-    const code = searchParams.get('code')
+    const searchParams = request.nextUrl.searchParams;
+    const userId = searchParams.get('user_id');
 
-    if (code) {
-      const event = await getEventByCode(code, supabase)
+    if (userId) {
+      const { data: events, error } = await supabase
+        .from('events')
+        .select('*')
+        .eq('user_id', userId)
+        .order('event_date', { ascending: false });
 
-      if (!event) {
+      if (error) {
         return NextResponse.json(
           {
             success: false,
-            error: 'Event not found'
+            error: error.message
           },
-          { status: 404 }
+          { status: 500 }
         )
       }
 
       return NextResponse.json({
         success: true,
-        event
+        events,
+        count: events.length
       })
     }
 
-    const events = await getAllEvents(supabase)
+    // otherwise, just return all events
+    const events = await getAllEvents(supabase);
 
     return NextResponse.json({
       success: true,

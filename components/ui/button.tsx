@@ -10,7 +10,7 @@ const buttonVariants = cva(
         variants: {
             variant: {
                 primary: `
-                    bg-primary text-primary-foreground
+                    bg-primary text-white
                     rounded-md
                     shadow-[inset_0_2px_4px_rgba(0,0,0,0.4),inset_0_-2px_4px_rgba(255,255,255,0.3)]
                     transition-all duration-150 ease-out
