@@ -3,59 +3,41 @@
 import React, { useEffect, useState } from "react";
 
 interface TypingAnimationProps {
-    text: string;
-    speed?: number; // typing speed (ms per char)
-    pause?: number; // pause at end before deleting
-    className? : string;
+  text: string;
+  speed?: number; // typing speed (ms per char)
+  className?: string;
 }
 
 const TypingAnimation: React.FC<TypingAnimationProps> = ({
-    text,
-    speed = 60,
-    pause = 3000,
-    className
+  text,
+  speed = 60,
+  className,
 }) => {
-    const [displayedText, setDisplayedText] = useState("");
-    const [typing, setTyping] = useState(true);
+  const [displayedText, setDisplayedText] = useState("");
 
-    useEffect(() => {
-        let index = 0;
-        let timeout: NodeJS.Timeout;
+  useEffect(() => {
+    let index = 0;
+    let timeout: NodeJS.Timeout;
 
-        const type = () => {
-            if (index < text.length) {
-                setDisplayedText(text.slice(0, index + 1));
-                index++;
-                timeout = setTimeout(type, speed);
-            } else {
-                timeout = setTimeout(() => setTyping(false), pause);
-            }
-        };
+    const type = () => {
+      if (index < text.length) {
+        setDisplayedText(text.slice(0, index + 1));
+        index++;
+        timeout = setTimeout(type, speed);
+      }
+    };
 
-        const del = () => {
-            if (index > 0) {
-                setDisplayedText(text.slice(0, index - 1));
-                index--;
-            } else {
-                timeout = setTimeout(() => setTyping(true), 200);
-            }
-        };
+    type();
 
-        if (typing) {
-            type();
-        } else {
-            del();
-        }
+    return () => clearTimeout(timeout);
+  }, [text, speed]);
 
-        return () => clearTimeout(timeout);
-    }, [typing, text, speed, pause]);
-
-    return (
-        <div className={className}>
-            {displayedText}
-            <span className="animate-blink text-accent ml-4">|</span>
-        </div>
-    );
+  return (
+    <div className={className}>
+      {displayedText}
+      <span className="animate-blink text-accent ml-4">|</span>
+    </div>
+  );
 };
 
 export default TypingAnimation;
