@@ -27,15 +27,19 @@ type StudentApiResponse = {
     partner_id: string;
 }
 
-export function EventScreen() {
+interface EventScreenProps {
+    initialCode?: string | null;
+}
+
+export function EventScreen({ initialCode }: EventScreenProps) {
     const [appState, setAppState] = useState<AppState>(AppState.Idle);
     const [studentId, setStudentId] = useState<string>('');
     const [studentData, setStudentData] = useState<StudentApiResponse | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 
     // event code state for backend attendance logging
-    const [eventCode, setEventCode] = useState<string>('');
-    const [isCodeSet, setIsCodeSet] = useState<boolean>(false);
+    const [eventCode, setEventCode] = useState<string>(initialCode?.toUpperCase().trim() || '');
+    const [isCodeSet, setIsCodeSet] = useState<boolean>(!!initialCode);
 
     const idleRef = useRef<HTMLDivElement>(null);
     const typingRef = useRef<HTMLDivElement>(null);
@@ -121,7 +125,7 @@ export function EventScreen() {
         gsap.set([typingRef.current, loadingRef.current, displayRef.current, errorRef.current], { autoAlpha: 0, clipPath: '' });
     }, []);
 
-    // prompt for event code when page loads
+    // prompt for event code when page loads (only if no initialCode was provided)
     useEffect(() => {
         if (!isCodeSet && !eventCode) {
             const code = window.prompt('Enter Event Code:');
@@ -136,8 +140,26 @@ export function EventScreen() {
                     description: 'Please refresh and enter a valid code'
                 });
             }
+        } else if (initialCode && !isCodeSet) {
+            // initialCode was provided via props
+            setIsCodeSet(true);
+            toast.success('Event code loaded!', {
+                description: `Ready to scan for: ${initialCode.toUpperCase().trim()}`
+            });
         }
-    }, [isCodeSet, eventCode]);
+    }, [isCodeSet, eventCode, initialCode]);
+
+    // Handler to manually change the event code
+    const handleChangeCode = useCallback(() => {
+        const code = window.prompt('Enter new Event Code:', eventCode);
+        if (code && code.trim()) {
+            setEventCode(code.toUpperCase().trim());
+            setIsCodeSet(true);
+            toast.success('Event code updated!', {
+                description: `Now scanning for: ${code.toUpperCase().trim()}`
+            });
+        }
+    }, [eventCode]);
 
     useEffect(() => {
         if (prevStateRef.current === appState) return;
@@ -290,6 +312,12 @@ export function EventScreen() {
                         </div>
                         <div className="absolute top-2 left-4 text-sm text-orange-500/70">ID_TAP TERMINAL V1.3.8</div>
                         <div className="absolute bottom-2 right-4 text-sm text-orange-500/70">SYSTEM STATUS: ONLINE</div>
+                        <button
+                            onClick={handleChangeCode}
+                            className="absolute top-2 right-4 text-xs text-orange-500/70 hover:text-orange-400 underline cursor-pointer"
+                        >
+                            {eventCode ? `Code: ${eventCode}` : 'Set Code'}
+                        </button>
                     </div>
 
                 </div>

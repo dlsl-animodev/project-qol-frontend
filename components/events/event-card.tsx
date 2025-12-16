@@ -70,7 +70,7 @@ function EventCard({
             View attendees <ExternalLink />
           </Button>
         </Link>
-        <Link href={`/attendees/${id}`}>
+        <Link href={`/scan/${id}`}>
           <Button className="w-full mt-4">
             Scan ID <ExternalLink />
           </Button>
