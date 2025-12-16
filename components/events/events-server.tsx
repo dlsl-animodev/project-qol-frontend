@@ -17,63 +17,64 @@ import EventCard from "./event-card";
 import { getEventsForUser } from "@/lib/queries/events";
 import { Event } from "@/types/database";
 import {
-    Empty,
-    EmptyContent,
-    EmptyDescription,
-    EmptyHeader,
-    EmptyMedia,
-    EmptyTitle,
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
 } from "@/components/ui/empty";
 import { CalendarX } from "lucide-react";
 import NewEventCodeButton from "@/components/events/new-event-code-button";
 
 export interface EventsServerProps {
-    eventUserId?: string;
+  eventUserId?: string;
 }
 
 async function EventsServer({ eventUserId }: EventsServerProps) {
-    const user = await requireUser();
-    const userId = eventUserId || user.id;
+  const user = await requireUser();
+  const userId = eventUserId || user.id;
 
-    const events: Event[] = await getEventsForUser(userId);
+  const events: Event[] = await getEventsForUser(userId);
 
-    if (events.length === 0) {
-        return (
-            <Empty className="w-full border bg-muted/10">
-                <EmptyHeader>
-                    <EmptyMedia variant="icon">
-                        <CalendarX className="size-6" />
-                    </EmptyMedia>
-                    <EmptyTitle className="font-pixel text-accent">
-                        No events yet
-                    </EmptyTitle>
-                    <EmptyDescription>
-                        Once ANIMO.DEV has approved your event, it will appear here.
-                    </EmptyDescription>
-                </EmptyHeader>
-                <EmptyContent>
-                    <NewEventCodeButton className="self-center" />
-                </EmptyContent>
-            </Empty>
-        );
-    }
-
+  if (events.length === 0) {
     return (
-        <CardContainer>
-            {events.map((event: Event, index) => (
-                <EventCard
-                    id={index.toString()}
-                    key={index}
-                    title={event.event_name}
-                    description={event.description || 'No description provided'}
-                    status={"Scheduled"}
-                    attendees={0}
-                    date={event.event_date}
-                    location={"Not specified"}
-                    time={"Not Specificed"} />
-            ))}
-        </CardContainer>
+      <Empty className="w-full border bg-muted/10">
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <CalendarX className="size-6" />
+          </EmptyMedia>
+          <EmptyTitle className="font-pixel text-accent">
+            No events yet
+          </EmptyTitle>
+          <EmptyDescription>
+            Once ANIMO.DEV has approved your event, it will appear here.
+          </EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          <NewEventCodeButton className="self-center" />
+        </EmptyContent>
+      </Empty>
     );
+  }
+
+  return (
+    <CardContainer>
+      {events.map((event: Event) => (
+        <EventCard
+          id={event.id}
+          key={event.id}
+          title={event.event_name}
+          description={event.description || "No description provided"}
+          status={"Scheduled"}
+          attendees={0}
+          date={event.event_date}
+          location={"Not specified"}
+          time={"Not Specificed"}
+        />
+      ))}
+    </CardContainer>
+  );
 }
 
 export default EventsServer;

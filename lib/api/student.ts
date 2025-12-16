@@ -1,6 +1,11 @@
-import type { StudentInfo } from '@/types/database'
+import type { StudentInfo } from "@/types/database";
 
-const STUDENT_API_URL = process.env.STUDENT_API_URL || 'https://project-qol-backend.onrender.com'
+const STUDENT_API_URL =
+  process.env.STUDENT_API_URL || "https://project-qol-backend.onrender.com";
+
+// Render free-tier cold starts can exceed 10s; give a bit more headroom.
+const REQUEST_TIMEOUT_MS = 20000;
+const MAX_RETRIES = 1;
 
 /**
  * Fetch student information from external API
@@ -9,39 +14,53 @@ const STUDENT_API_URL = process.env.STUDENT_API_URL || 'https://project-qol-back
  * @throws Error if student not found or API error
  */
 
-export async function fetchStudentInfo(studentId: string): Promise<StudentInfo> {
-  try {
-    const response = await fetch(
-      `${STUDENT_API_URL}/api/student?id=${studentId}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        cache: 'no-store',
-        signal: AbortSignal.timeout(10000)
+export async function fetchStudentInfo(
+  studentId: string
+): Promise<StudentInfo> {
+  let attempt = 0;
+
+  while (true) {
+    try {
+      const response = await fetch(
+        `${STUDENT_API_URL}/api/student?id=${studentId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          cache: "no-store",
+          signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+        }
+      );
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error("Student not found");
+        }
+        throw new Error(`API Error: ${response.statusText}`);
       }
-    )
 
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('Student not found')
+      const data = await response.json();
+
+      if (!data || !data.card_tag_uid) {
+        throw new Error("Invalid student data received");
       }
-      throw new Error(`API Error: ${response.statusText}`)
-    }
 
-    const data = await response.json()
+      return data as StudentInfo;
+    } catch (error: unknown) {
+      const isTimeout = error instanceof Error && error.name === "TimeoutError";
 
-    if (!data || !data.card_tag_uid) {
-      throw new Error('Invalid student data received')
-    }
+      if (isTimeout && attempt < MAX_RETRIES) {
+        attempt += 1;
+        continue;
+      }
 
-    return data as StudentInfo
-  } catch (error: unknown) {
-    if (error instanceof Error && error.name === 'TimeoutError') {
-      throw new Error('Student API request timed out')
+      if (isTimeout) {
+        throw new Error("Student API request timed out");
+      }
+
+      throw error;
     }
-    throw error
   }
 }
 
@@ -62,7 +81,7 @@ export function formatStudentName(email: string | undefined): string {
 
   // 3. capitalize first letter, lowercase the rest
   const formattedName = nameWords
-    .map(word => {
+    .map((word) => {
       return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
     })
     .join(" ");
