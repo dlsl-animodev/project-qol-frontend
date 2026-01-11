@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { RectangleEllipsis } from "lucide-react";
 import SplitTextLocal from "../interactive/split-text-local";
 
 import { useInView } from "@/hooks/use-inView";
@@ -11,7 +10,7 @@ const FooterCTASection = () => {
     return (
         <section
             ref={footerRef}
-            className="flex flex-col items-center  h-[calc(100vh-10rem)] pt-[10rem] justify-center px-[2rem]"
+            className="flex flex-col items-center  h-[calc(100vh-10rem)] pt-[10rem] justify-center px-[2rem] gap-4"
         >
             {footerInView && (
                 <>
@@ -32,10 +31,8 @@ const FooterCTASection = () => {
                         experience the difference.
                     </SplitTextLocal>
                     <SplitTextLocal play={footerInView} delay={1.5}>
-                        <Button className="mt-2" asChild>
-                            <Link href={"/home"}>
-                                <RectangleEllipsis /> Get your event code now
-                            </Link>
+                        <Button className="mt-2" asChild size={"lg"}>
+                            <Link href={"/home"}>Get Event Code</Link>
                         </Button>
                     </SplitTextLocal>
                 </>
