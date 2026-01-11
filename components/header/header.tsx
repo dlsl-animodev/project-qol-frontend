@@ -23,7 +23,7 @@ export interface HeaderProps {
 }
 
 const BASE_HEADER_CLASSNAME =
-    "h-12 px-6 text-primary-foreground fixed shadow-xl border-b w-full z-50 backdrop-blur-md bg-primary/50";
+    "h-16 px-6 text-primary-foreground fixed shadow-xl w-full z-50 backdrop-blur-md bg-primary/50";
 
 const Header = ({ user }: HeaderProps) => {
     const isTablet = useIsTablet();
