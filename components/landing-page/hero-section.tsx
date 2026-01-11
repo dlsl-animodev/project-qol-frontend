@@ -1,6 +1,4 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
-import { RectangleEllipsis } from "lucide-react";
 import SplitTextLocal from "@/components/interactive/split-text-local";
 import AnimoDevBadge from "../reusables/animo-dev-badge";
 import Link from "next/link";
@@ -22,15 +20,13 @@ const HeroSection = () => {
                 type="lines"
                 delay={1}
             >
-                Tired of manual event check-ins and check-outs tracking? <br /> Project
-                QOL provides a seamless, IOT-powered solution <br /> for managing event
-                check-ins and check outs with a simple ID scan
+                Tired of manual event check-ins and check-outs tracking? <br />{" "}
+                Project QOL provides a seamless, IOT-powered solution <br /> for
+                managing event check-ins and check outs with a simple ID scan
             </SplitTextLocal>
             <SplitTextLocal delay={1.5}>
-                <Button className="mt-4" asChild>
-                    <Link href={'/home'}>
-                        <RectangleEllipsis /> Get started
-                    </Link>
+                <Button className="mt-4" asChild size={"lg"}>
+                    <Link href={"/home"}>Get started</Link>
                 </Button>
             </SplitTextLocal>
         </section>
