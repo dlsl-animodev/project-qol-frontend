@@ -34,7 +34,7 @@ const HowItWorksSection = () => {
                             HOW IT WORKS
                         </h2>
                     </SplitTextLocal>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 px-[2rem] md:px-[2rem] lg:px-[5rem] gap-[2rem] md:gap-[2rem] lg:gap-[5rem] ">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 px-[2rem] md:px-[2rem] lg:px-[5rem] gap-[2rem] max-w-7xl mx-auto">
                         {HOW_IT_WORKS_STEPS.map((step, index) => (
                             <SplitTextLocal
                                 key={index}
