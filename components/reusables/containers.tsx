@@ -11,7 +11,7 @@ const PageContainer: React.FC<ContainerProps> = ({ children, className }) => {
     return (
         <section
             className={twMerge(
-                `flex flex-col items-center py-[4rem] px-[6rem] gap-6`,
+                `flex flex-col items-center py-[4rem] px-[6rem] gap-[4rem]`,
                 className
             )}
         >
