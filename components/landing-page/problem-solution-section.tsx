@@ -90,7 +90,7 @@ const ProblemSolutionSection = () => {
     return (
         <section
             ref={processRef}
-            className="grid grid-cols-1 md:grid-cols-2 items-center bg-accent shadow border-y"
+            className="grid grid-cols-1 md:grid-cols-2 items-center bg-accent py-[1rem]"
         >
             <>
                 <div>
@@ -164,7 +164,7 @@ const CardView: React.FC<CardViewProps> = ({
                         key={index}
                         className="px-4 py-2 text-base lg:text-xl font-bold rounded-xl flex items-center gap-2"
                     >
-                        <Icon />
+                        <Icon size={40} />
                         {text}
                     </li>
                 ))}
