@@ -10,12 +10,12 @@ const FooterCTASection = () => {
     return (
         <section
             ref={footerRef}
-            className="flex flex-col items-center  h-[calc(100vh-18rem)] pt-[8rem] justify-center px-[2rem] gap-4"
+            className="flex flex-col items-center h-[calc(100vh-8rem)] md:h-[calc(100vh-18rem)] pt-[10rem] md:pt-[12rem] justify-center px-[2rem] gap-4"
         >
             {footerInView && (
                 <>
                     <SplitTextLocal type="chars" className="w-full text-center">
-                        <h2 className="font-bold font-pixel text-5xl md:text-6xl">
+                        <h2 className="font-bold font-pixel text-4xl sm:text-5xl md:text-6xl">
                             Ready to streamline your events?
                         </h2>
                     </SplitTextLocal>
@@ -24,7 +24,7 @@ const FooterCTASection = () => {
                         stagger={0.06}
                         delay={1}
                         type="lines"
-                        className="text-sm md:text-lg text-center"
+                        className="text-center text-xs sm:text-sm md:text-lg max-w-5xl "
                     >
                         Join other organizations in making event check-ins and
                         outs effortless. Requests your event code today and

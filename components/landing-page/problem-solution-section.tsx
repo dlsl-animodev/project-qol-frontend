@@ -100,7 +100,7 @@ const ProblemSolutionSection = () => {
                             stagger={0.04}
                             className="w-full"
                         >
-                            <h2 className="font-bold font-pixel text-center md:text-left text-5xl sm:text-4xl lg:text-6xl text-background md:ml-[4rem] mt-[3rem] md:mt-[0rem] mx-4">
+                            <h2 className="font-bold font-pixel text-center md:text-left text-3xl sm:text-4xl lg:text-6xl text-background md:ml-[4rem] mt-[3rem] md:mt-[0rem] mx-4">
                                 Managing event attendance should not be a hassle
                             </h2>
                         </SplitTextLocal>
@@ -155,7 +155,7 @@ const CardView: React.FC<CardViewProps> = ({
             id={id}
             ref={ref}
         >
-            <h3 className="font-pixel text-6xl md:text-6xl lg:text-7xl xl:text-8xl">
+            <h3 className="font-pixel text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
                 {title}
             </h3>
             <ul>
