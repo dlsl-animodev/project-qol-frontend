@@ -33,7 +33,7 @@ async function AdminPage({ searchParams }: AdminPageProps) {
             <PageContainer>
                 {/* JUST A CUSTOM NOTE  */}
                 <div className="flex flex-col items-center gap-4">
-                    <p className="w-fit bg-accent px-4 py-1 text-xs rounded-md text-accent-foreground font-bold">
+                    <p className="w-fit bg-[#d68b12] px-4 py-1 text-[16px] rounded-md text-accent-foreground font-bold">
                         THIS IS THE VIEW OF THE ADMINS
                     </p>
 
