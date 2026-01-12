@@ -10,7 +10,7 @@ const FooterCTASection = () => {
     return (
         <section
             ref={footerRef}
-            className="flex flex-col items-center  h-[calc(100vh-10rem)] pt-[10rem] justify-center px-[2rem] gap-4"
+            className="flex flex-col items-center  h-[calc(100vh-18rem)] pt-[8rem] justify-center px-[2rem] gap-4"
         >
             {footerInView && (
                 <>
