@@ -67,7 +67,7 @@ const ProblemSolutionSection = () => {
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: container,
-                start: "top 50%",
+                start: "top 45%",
                 end: `+=${flipScrollRange}`,
                 scrub: 0.25,
                 // markers: true,
