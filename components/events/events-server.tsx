@@ -51,9 +51,6 @@ async function EventsServer({ eventUserId }: EventsServerProps) {
             Once ANIMO.DEV has approved your event, it will appear here.
           </EmptyDescription>
         </EmptyHeader>
-        <EmptyContent>
-          <NewEventCodeButton className="self-center" />
-        </EmptyContent>
       </Empty>
     );
   }

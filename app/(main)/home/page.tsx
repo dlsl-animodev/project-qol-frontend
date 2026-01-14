@@ -7,6 +7,7 @@ import {
 } from "@/components/reusables/containers";
 import EventsServer from "@/components/events/events-server";
 import { Suspense } from "react";
+import NewEventCodeButton from "@/components/events/new-event-code-button";
 
 const HomePage = () => {
   return (
@@ -28,6 +29,7 @@ const HomePage = () => {
           title="Events in Dashboard"
           description="See, manage, and add new events here"
         />
+        <NewEventCodeButton className=" mb-4" />
 
         <PageContentMain>
           {/* EVENTS  */}
