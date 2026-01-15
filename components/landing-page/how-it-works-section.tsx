@@ -30,24 +30,24 @@ const HowItWorksSection = () => {
             {howItWorksInView && (
                 <>
                     <SplitTextLocal type="chars">
-                        <h2 className="font-bold font-pixel text-center text-6xl mb-10">
+                        <h2 className="font-bold font-pixel text-center text-5xl md:text-6xl mb-10">
                             HOW IT WORKS
                         </h2>
                     </SplitTextLocal>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 px-[2rem] md:px-[2rem] lg:px-[5rem] gap-[2rem] md:gap-[2rem] lg:gap-[5rem] ">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 px-[2rem] md:px-[2rem] lg:px-[5rem] gap-[2rem] max-w-7xl mx-auto">
                         {HOW_IT_WORKS_STEPS.map((step, index) => (
                             <SplitTextLocal
                                 key={index}
                                 play={howItWorksInView}
                                 delay={(index + 1) * 0.5}
-                                className={` bg-primary flex items-center justify-center rounded-lg flex-col p-4 py-8 space-y-4 shadow border ${index === 2 ? 'sm:col-span-2 md:col-span-1' : ''}`}
+                                className={` bg-primary flex items-center justify-center rounded-lg flex-col p-4 py-8 space-y-4 shadow ${index === 2 ? 'sm:col-span-2 md:col-span-1' : ''}`}
                             >
                                 {step.icon}
                                 <div>
-                                    <p className="text-lg font-bold">
+                                    <p className="text-base md:text-lg font-bold">
                                         {step.title}
                                     </p>
-                                    <p>{step.description}</p>
+                                    <p className="text-xs md:text-base">{step.description}</p>
                                 </div>
                             </SplitTextLocal>
                         ))}

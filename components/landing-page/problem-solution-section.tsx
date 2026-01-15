@@ -67,7 +67,7 @@ const ProblemSolutionSection = () => {
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: container,
-                start: "top 50%",
+                start: "top 45%",
                 end: `+=${flipScrollRange}`,
                 scrub: 0.25,
                 // markers: true,
@@ -90,7 +90,7 @@ const ProblemSolutionSection = () => {
     return (
         <section
             ref={processRef}
-            className="grid grid-cols-1 md:grid-cols-2 items-center bg-accent shadow border-y"
+            className="grid grid-cols-1 md:grid-cols-2 items-center bg-accent py-[1rem]"
         >
             <>
                 <div>
@@ -100,7 +100,7 @@ const ProblemSolutionSection = () => {
                             stagger={0.04}
                             className="w-full"
                         >
-                            <h2 className="font-bold font-pixel text-center md:text-left text-5xl sm:text-4xl lg:text-6xl text-background md:ml-[4rem] mt-[3rem] md:mt-[0rem] mx-4">
+                            <h2 className="font-bold font-pixel text-center md:text-left text-3xl sm:text-4xl lg:text-6xl text-background md:ml-[4rem] mt-[3rem] md:mt-[0rem] mx-4">
                                 Managing event attendance should not be a hassle
                             </h2>
                         </SplitTextLocal>
@@ -155,7 +155,7 @@ const CardView: React.FC<CardViewProps> = ({
             id={id}
             ref={ref}
         >
-            <h3 className="font-pixel text-6xl md:text-6xl lg:text-7xl xl:text-8xl">
+            <h3 className="font-pixel text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
                 {title}
             </h3>
             <ul>
@@ -164,7 +164,7 @@ const CardView: React.FC<CardViewProps> = ({
                         key={index}
                         className="px-4 py-2 text-base lg:text-xl font-bold rounded-xl flex items-center gap-2"
                     >
-                        <Icon />
+                        <Icon size={40} />
                         {text}
                     </li>
                 ))}

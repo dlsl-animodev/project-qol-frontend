@@ -51,7 +51,7 @@ export default function RootLayout({
 
                 <HeaderServer />
                 <main className="min-h-screen">
-                    <div className="h-12 bg-primary" />
+                    <div className="h-16 bg-primary" />
                     <Suspense>
                       {children}
                     </Suspense>

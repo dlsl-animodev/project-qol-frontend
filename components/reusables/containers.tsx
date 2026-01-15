@@ -11,7 +11,7 @@ const PageContainer: React.FC<ContainerProps> = ({ children, className }) => {
     return (
         <section
             className={twMerge(
-                `flex flex-col items-center py-[4rem] px-[6rem] gap-6`,
+                `flex flex-col items-center py-[4rem] px-[6rem] gap-[4rem]`,
                 className
             )}
         >
@@ -70,7 +70,7 @@ const TypingAnimationBackgroundContainer: React.FC<ContainerProps> = ({
                 className
             )}
         >
-            <div className="absolute inset-0 bg-[url('/images/gradient-background.png')] bg-cover bg-center bg-no-repeat shadow-lg border-b"></div>
+            <div className="absolute inset-0 bg-[url('/images/gradient-background-v2.png')] bg-cover bg-center bg-no-repeat shadow-lg border-b"></div>
             <div className="relative z-10 px-8 py-4 rounded-lg bg-white/20 backdrop-blur-md border border-white/30">
                 {children}
             </div>

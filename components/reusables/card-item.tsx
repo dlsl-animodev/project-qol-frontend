@@ -10,11 +10,7 @@ const CardItem: React.FC<CardItemProps> = ({
     return (
         <li
             className="
-                p-4 bg-accent text-accent-foreground rounded-md flex flex-col justify-between
-                border
-                transition-all hover:-translate-y-5 hover:rotate-2 hover:bg-accent/95 duration-300 ease-out
-                shadow-[inset_0_2px_12px_rgba(0,0,0,0.4),inset_0_-2px_4px_rgba(255,255,255,0.3)]
-                will-change-transform
+                p-4 bg-accent text-accent-foreground rounded-md flex flex-col justify-between hover:opacity-95 transition-opacity
             "
         >
             {children}
