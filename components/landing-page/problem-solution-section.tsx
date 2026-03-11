@@ -20,7 +20,7 @@ const PROBLEM_POINTS = {
     id: "front-card-view",
     // mappable points
     points: [
-        "Manual singing sheets cause long lines and errors",
+        "Manual signing sheets cause long lines and errors",
         "Organizers spend long checking and encoding attendance",
         "Students can not easily verify if they were marked present",
     ],
