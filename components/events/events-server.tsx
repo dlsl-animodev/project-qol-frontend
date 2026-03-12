@@ -42,7 +42,7 @@ async function EventsServer({ eventUserId }: EventsServerProps) {
     events.map(async (event) => ({
       event,
       attendees: await getAttendanceCount(event.id, supabase),
-    }))
+    })),
   );
 
   if (events.length === 0) {

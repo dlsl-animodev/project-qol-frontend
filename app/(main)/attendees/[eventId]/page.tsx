@@ -14,12 +14,6 @@ type EventAttendeesPageProps = {
   params: Promise<{ eventId: string }>;
 };
 
-const formatDateTime = (iso: string | null | undefined) => {
-  if (!iso) return "";
-  const date = new Date(iso);
-  return isNaN(date.getTime()) ? "" : date.toLocaleString();
-};
-
 const EventAttendeesPage = async ({ params }: EventAttendeesPageProps) => {
   const { eventId } = await params;
 
@@ -50,7 +44,7 @@ const EventAttendeesPage = async ({ params }: EventAttendeesPageProps) => {
     const attendance = await getEventAttendance(eventId, supabase);
     attendanceRows = attendance.map((entry) => ({
       id: entry.student_id,
-      time_in: formatDateTime(entry.tapped_at),
+      time_in: entry.tapped_at,
       name: entry.student_name ?? "Unknown",
       email: entry.email_address ?? "",
       time_out: "", // no time_out in schema yet

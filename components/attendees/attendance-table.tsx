@@ -15,12 +15,38 @@ export interface Columns {
     isMember: boolean;
 }
 
+const formatLocalDateTime = (iso: string) => {
+    if (!iso) return "";
+
+    const date = new Date(iso);
+
+    if (Number.isNaN(date.getTime())) {
+        return iso;
+    }
+
+    return new Intl.DateTimeFormat(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+    }).format(date);
+};
+
 const columns: ColumnDef<Columns>[] = [
     { accessorKey: "id", header: "ID" },
-    { accessorKey: "time_in", header: "Time In" },
+    {
+        accessorKey: "time_in",
+        header: "Time In",
+        cell: ({ row }) => formatLocalDateTime(row.original.time_in),
+    },
     { accessorKey: "name", header: "Name" },
     { accessorKey: "email", header: "Email" },
-    { accessorKey: "time_out", header: "Time Out" },
+    {
+        accessorKey: "time_out",
+        header: "Time Out",
+        cell: ({ row }) => formatLocalDateTime(row.original.time_out),
+    },
     {
         accessorKey: "isMember",
         header: "Is Member",
