@@ -4,7 +4,8 @@
 
 import { revalidatePath } from 'next/cache';
 import { createSupabaseServerClient, createSupabaseServiceClient } from '@/lib/supabase/server';
-import { requireUser, requireAdmin } from '@/lib/supabase/auth';
+import { requireUser } from '@/lib/supabase/auth';
+import { getUserRole } from '@/lib/queries/user';
 import type { Event, Code } from '@/types/database';
 
 // admin creates event for an organization
@@ -24,14 +25,22 @@ export async function createEvent(eventData: {
   message?: string;
 }> {
   try {
-
-    const user = await requireAdmin();
+    const user = await requireUser();
+    const role = await getUserRole();
     // use service role client to bypass RLS when creating events for organizations
     const supabase = createSupabaseServiceClient();
 
-    const assignedUserId = eventData.user_id || user.id;
+    const requestedUserId = eventData.user_id;
+    const assignedUserId = requestedUserId || user.id;
 
-    // balidate UUID format for assigned user
+    if (requestedUserId && requestedUserId !== user.id && role !== 'admin') {
+      return {
+        success: false,
+        error: 'You are not allowed to create events for another user.'
+      };
+    }
+
+    // validate UUID format for assigned user
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     if (!uuidRegex.test(assignedUserId)) {
       return {

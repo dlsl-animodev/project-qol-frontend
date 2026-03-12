@@ -18,14 +18,12 @@ import { getEventsForUser } from "@/lib/queries/events";
 import { Event } from "@/types/database";
 import {
   Empty,
-  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
 import { CalendarX } from "lucide-react";
-import NewEventCodeButton from "@/components/events/new-event-code-button";
 
 export interface EventsServerProps {
   eventUserId?: string;
@@ -51,9 +49,6 @@ async function EventsServer({ eventUserId }: EventsServerProps) {
             Once ANIMO.DEV has approved your event, it will appear here.
           </EmptyDescription>
         </EmptyHeader>
-        <EmptyContent>
-          <NewEventCodeButton className="self-center" />
-        </EmptyContent>
       </Empty>
     );
   }
