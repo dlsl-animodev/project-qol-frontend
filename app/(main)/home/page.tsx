@@ -21,15 +21,16 @@ const HomePage = () => {
 
       <PageContainer>
         {/* JUST A CUSTOM NOTE  */}
-        <div className="bg-accent px-4 py-1 text-xs rounded-md text-accent-foreground font-bold">
-          THIS IS THE VIEW OF THE ORGANIZATIONS. GO ADMIN FOR ADMIN VIEW.
+        <div className="flex flex-col items-center gap-4">
+          <p className="bg-accent px-4 py-1 text-[16px] rounded-md text-accent-foreground font-bold">
+            THIS IS THE VIEW OF THE ORGANIZATIONS
+          </p>
+          <PageContentHeader
+            title="Events in Dashboard"
+            description="See, manage, and add new events here"
+          />
+          <NewEventCodeButton className=" mb-4" />
         </div>
-
-        <PageContentHeader
-          title="Events in Dashboard"
-          description="See, manage, and add new events here"
-        />
-        <NewEventCodeButton className=" mb-4" />
 
         <PageContentMain>
           {/* EVENTS  */}

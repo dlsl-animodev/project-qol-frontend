@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const AnimoDevBadge = () => {
     return (
-        <div className="bg-gradient-to-r from-yellow-500 via-purple-500 to-pink-500 text-white px-4 py-1 rounded-lg font-bold mb-4 shadow-md">
+        <div className="bg-gradient-to-r from-yellow-500 via-purple-500 to-pink-500 text-white text-xs md:text-sm px-4 py-1 rounded-lg font-bold mb-4 shadow-md">
             {" "}
             Developed and maintained by
             <Link href={"#"} className="underline">
