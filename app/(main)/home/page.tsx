@@ -26,11 +26,11 @@ const HomePage = async () => {
         {/* JUST A CUSTOM NOTE  */}
         <div className="flex flex-col items-center gap-4">
           <p className="bg-accent px-4 py-1 text-[16px] rounded-md text-accent-foreground font-bold">
-            THIS IS THE VIEW OF THE ORGANIZATIONS
+            CREATE YOUR EVENT, SCAN IDS, AND TRACK ATTENDANCE HERE
           </p>
           <PageContentHeader
             title="Events in Dashboard"
-            description="See, manage, and add new events here"
+            description="Create your own events, open them to scan IDs, and review attendance anytime."
           />
           <CreateEventButton
             userId={user.id}
