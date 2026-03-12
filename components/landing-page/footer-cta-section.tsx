@@ -26,13 +26,13 @@ const FooterCTASection = () => {
                         type="lines"
                         className="text-center text-xs sm:text-sm md:text-lg max-w-5xl "
                     >
-                        Join other organizations in making event check-ins and
-                        outs effortless. Requests your event code today and
-                        experience the difference.
+                        Create your event, scan IDs, and monitor attendance in
+                        one place. Start managing your next event without the
+                        extra back-and-forth.
                     </SplitTextLocal>
                     <SplitTextLocal play={footerInView} delay={1.5}>
                         <Button className="mt-2" asChild size={"lg"}>
-                            <Link href={"/home"}>Get Event Code</Link>
+                            <Link href={"/home"}>Open Dashboard</Link>
                         </Button>
                     </SplitTextLocal>
                 </>

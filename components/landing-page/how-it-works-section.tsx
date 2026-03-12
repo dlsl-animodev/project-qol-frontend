@@ -1,8 +1,9 @@
 import React from "react";
 import {
-  Mail,
-  ClipboardCheck,
-  CalendarCheck,
+  CalendarPlus,
+  ScanLine,
+  ClipboardList,
+  ChartColumn,
   LucideIcon,
 } from "lucide-react";
 import SplitTextLocal from "../interactive/split-text-local";
@@ -18,39 +19,39 @@ type HowItWorksStep = {
 const HOW_IT_WORKS_STEPS: HowItWorksStep[] = [
   {
     step: 1,
-    title: "Email your event details",
+    title: "Create your event",
     description: (
       <span>
-        Send event details to{" "}
-        <a
-          href="mailto:developers.society@dlsl.edu.ph"
-           className="text-black hover:underline hover:text-blue-500 decoration-black transition-colors"
-          aria-label="Email Developers Society at developers.society@dlsl.edu.ph"
-        >
-          developers.society@dlsl.edu.ph
-        </a>
-        .
+        Set up your event directly from your dashboard in just a few clicks.
       </span>
-    ), // 5 words
-    Icon: Mail,
+    ),
+    Icon: CalendarPlus,
   },
   {
     step: 2,
-    title: "Admin verification",
-    description: <span>Admins review and verify your event submission.</span>, // 7 words
-    Icon: ClipboardCheck,
+    title: "Open event tools",
+    description: (
+      <span>Use your event page to access scanning and attendee tracking.</span>
+    ),
+    Icon: ClipboardList,
   },
   {
     step: 3,
-    title: "Event listing",
-    description: <span>Admins will list your event after approval.</span>, // 7 words
-    Icon: CalendarCheck,
+    title: "Scan student IDs",
+    description: (
+      <span>Track attendance instantly by scanning IDs during the event.</span>
+    ),
+    Icon: ScanLine,
   },
   {
     step: 4,
-    title: "View your event",
-    description: <span>View the event on your organizer dashboard.</span>, // 7 words
-    Icon: CalendarCheck,
+    title: "Review attendance",
+    description: (
+      <span>
+        View your attendee list anytime and keep attendance records organized.
+      </span>
+    ),
+    Icon: ChartColumn,
   },
 ];
 
@@ -74,7 +75,7 @@ const StepCard = ({ step, index, play }: StepCardProps) => {
         play={play}
         delay={index * 0.15}
         className={[
-          "bg-primary flex flex-col items-center justify-center w-full", 
+          "bg-primary flex flex-col items-center justify-center w-full",
           "p-8 gap-2 text-center rounded-3xl min-h-[350px] border-2 border-secondary/30",
           "shadow-[4px_4px_0px_rgba(0,0,0,0.15)]", // custom depth shadow
           "transition-opacity duration-300 transform",
@@ -92,10 +93,10 @@ const StepCard = ({ step, index, play }: StepCardProps) => {
 
         {/* Text content */}
         <div className="flex flex-col gap-2">
-     <h3 className="text-lg font-semibold leading-snug whitespace-nowrap overflow-hidden text-ellipsis">
+          <h3 className="text-lg font-semibold leading-snug whitespace-nowrap overflow-hidden text-ellipsis">
             {step.title}
           </h3>
-           <p className="text-sm leading-relaxed opacity-80">
+          <p className="text-sm leading-relaxed opacity-80">
             {step.description}
           </p>
         </div>

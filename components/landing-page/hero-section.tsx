@@ -20,9 +20,9 @@ const HeroSection = () => {
                 type="lines"
                 delay={1}
             >
-                Tired of manual event check-ins and check-outs tracking? Project
-                QOL provides a seamless, IOT-powered solution for managing event
-                check-ins and check outs with a simple ID scan
+                Create your own event, scan IDs as attendees arrive, and review
+                attendance from one streamlined dashboard. Project QOL makes
+                event check-ins faster, cleaner, and easier to manage.
             </SplitTextLocal>
             <SplitTextLocal delay={1.5}>
                 <Button className="mt-2" asChild size={"lg"}>
