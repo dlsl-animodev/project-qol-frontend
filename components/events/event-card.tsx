@@ -23,6 +23,37 @@ interface EventCardProps {
   time: string;
 }
 
+const eventDateFormatter = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+});
+
+const eventTimeFormatter = new Intl.DateTimeFormat("en-US", {
+  hour: "numeric",
+  minute: "2-digit",
+});
+
+function formatEventDate(date: string) {
+  const parsedDate = new Date(date);
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    return date;
+  }
+
+  return eventDateFormatter.format(parsedDate);
+}
+
+function formatEventTime(date: string, fallbackTime: string) {
+  const parsedDate = new Date(date);
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    return fallbackTime;
+  }
+
+  return eventTimeFormatter.format(parsedDate);
+}
+
 function EventCard({
   id,
   title,
@@ -33,12 +64,15 @@ function EventCard({
   location,
   time,
 }: EventCardProps) {
+  const formattedDate = formatEventDate(date);
+  const formattedTime = formatEventTime(date, time);
+
   // Convert the stats to mappable array
   const stats = [
-    { label: "attendees", value: attendees, icon: User },
-    { label: "date", value: date, icon: Calendar },
-    { label: "location", value: location, icon: MapPin },
-    { label: "time", value: time, icon: Clock },
+    { key: "attendees", content: `${attendees} attendees`, icon: User },
+    { key: "date", content: formattedDate, icon: Calendar },
+    { key: "location", content: location, icon: MapPin },
+    { key: "time", content: formattedTime, icon: Clock },
   ];
 
   return (
@@ -58,8 +92,8 @@ function EventCard({
       <CardItemMain>
         <CardStats className="grid grid-cols-2 gap-2">
           {stats.map((stat) => (
-            <CardStatsItem key={stat.label}>
-              <stat.icon size={17} /> {stat.value} {stat.label}
+            <CardStatsItem key={stat.key}>
+              <stat.icon size={17} /> {stat.content}
             </CardStatsItem>
           ))}
         </CardStats>

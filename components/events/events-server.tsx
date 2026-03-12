@@ -24,6 +24,8 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { CalendarX } from "lucide-react";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getAttendanceCount } from "@/lib/queries/attendance";
 
 export interface EventsServerProps {
   eventUserId?: string;
@@ -32,8 +34,16 @@ export interface EventsServerProps {
 async function EventsServer({ eventUserId }: EventsServerProps) {
   const user = await requireUser();
   const userId = eventUserId || user.id;
+  const supabase = await createSupabaseServerClient();
 
   const events: Event[] = await getEventsForUser(userId);
+
+  const eventsWithAttendance = await Promise.all(
+    events.map(async (event) => ({
+      event,
+      attendees: await getAttendanceCount(event.id, supabase),
+    })),
+  );
 
   if (events.length === 0) {
     return (
@@ -45,9 +55,7 @@ async function EventsServer({ eventUserId }: EventsServerProps) {
           <EmptyTitle className="font-pixel text-accent">
             No events yet
           </EmptyTitle>
-          <EmptyDescription>
-            Once ANIMO.DEV has approved your event, it will appear here.
-          </EmptyDescription>
+          <EmptyDescription>Create your first event.</EmptyDescription>
         </EmptyHeader>
       </Empty>
     );
@@ -55,14 +63,14 @@ async function EventsServer({ eventUserId }: EventsServerProps) {
 
   return (
     <CardContainer>
-      {events.map((event: Event) => (
+      {eventsWithAttendance.map(({ event, attendees }) => (
         <EventCard
           id={event.id}
           key={event.id}
           title={event.event_name}
           description={event.description || "No description provided"}
           status={"Scheduled"}
-          attendees={0}
+          attendees={attendees}
           date={event.event_date}
           location={"Not specified"}
           time={"Not Specificed"}
