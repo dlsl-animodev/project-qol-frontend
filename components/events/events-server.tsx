@@ -18,14 +18,12 @@ import { getEventsForUser } from "@/lib/queries/events";
 import { Event } from "@/types/database";
 import {
   Empty,
-  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
 import { CalendarX } from "lucide-react";
-import NewEventCodeButton from "@/components/events/new-event-code-button";
 
 export interface EventsServerProps {
   eventUserId?: string;
