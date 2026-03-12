@@ -119,7 +119,11 @@ const AttendanceTable: React.FC<AttendanceTableProps> = ({ data }) => {
   };
 
   const handleExportPdf = () => {
-    const pdf = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
+    const pdf = new jsPDF({
+      orientation: "landscape",
+      unit: "pt",
+      format: "a4",
+    });
 
     pdf.setFontSize(16);
     pdf.text("Attendance Export", 40, 40);
