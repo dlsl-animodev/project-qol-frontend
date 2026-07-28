@@ -14,9 +14,9 @@
   background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
     linear-gradient(
       90deg,
-      rgba(255, 0, 0, 0.06),
-      rgba(0, 255, 0, 0.02),
-      rgba(0, 0, 255, 0.06)
+      rgba(197, 35, 48, 0.08),
+      rgba(172, 221, 156, 0.05),
+      rgba(118, 192, 227, 0.08)
     );
   z-index: 2;
   background-size: 100% 2px, 3px 100%;
@@ -64,10 +64,10 @@
   font-family: "Press Start 2P", cursive;
   background-color: transparent;
   background-image: linear-gradient(
-      rgba(249, 115, 22, 0.07) 1px,
+      rgba(249, 212, 71, 0.08) 1px,
       transparent 1px
     ),
-    linear-gradient(90deg, rgba(249, 115, 22, 0.07) 1px, transparent 1px);
+    linear-gradient(90deg, rgba(118, 192, 227, 0.08) 1px, transparent 1px);
   background-size: 40px 40px;
   animation: move-grid 3s linear infinite;
 }

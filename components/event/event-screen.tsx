@@ -373,9 +373,9 @@ export function EventScreen({ initialCode }: EventScreenProps) {
   }, [startAttendance, isCodeSet]);
 
   return (
-    <main className="bg-grid-animated text-orange-500 w-screen h-screen flex items-center justify-center p-4 overflow-hidden">
-      <div className="w-full max-w-4xl h-full max-h-[600px] bg-gradient-to-b from-orange-700 to-orange-900 p-6 rounded-3xl shadow-[0_0_40px_rgba(249,115,22,0.5),inset_0_4px_8px_rgba(0,0,0,0.6)] border-2 border-black/50">
-        <div className="w-full h-full bg-black/80 rounded-xl relative overflow-hidden crt-screen">
+    <main className="bg-grid-animated text-[#f9d447] w-screen h-screen flex items-center justify-center overflow-hidden">
+      <div className="w-full h-full bg-[#76c0e3] p-6 shadow-[0_0_40px_rgba(197,35,48,0.45),inset_0_4px_8px_rgba(172,221,156,0.18)] ">
+        <div className="w-full h-full bg-[#013d7b]/90 rounded-xl relative overflow-hidden crt-screen">
           <div className="inset-0 crt-content-bulge">
             <div ref={idleRef} className="absolute inset-8">
               <IdleScreen isActive={appState === AppState.Idle} />
@@ -401,15 +401,15 @@ export function EventScreen({ initialCode }: EventScreenProps) {
                 message={errorMessage}
               />
             </div>
-            <div className="absolute top-2 left-4 text-sm text-orange-500/70">
+            <div className="absolute top-2 left-4 text-sm text-[#f9d447]/80">
               ID_TAP TERMINAL V1.3.8
             </div>
-            <div className="absolute bottom-2 right-4 text-sm text-orange-500/70">
+            <div className="absolute bottom-2 right-4 text-sm text-[#acdd9c]/80">
               SYSTEM STATUS: ONLINE
             </div>
             <button
               onClick={handleChangeCode}
-              className="absolute top-2 right-4 text-xs text-orange-500/70 hover:text-orange-400 underline cursor-pointer"
+              className="absolute top-2 right-4 text-xs text-[#f9d447]/80 hover:text-[#acdd9c] underline cursor-pointer"
             >
               {eventCode ? `Code: ${eventCode}` : "Set Code"}
             </button>

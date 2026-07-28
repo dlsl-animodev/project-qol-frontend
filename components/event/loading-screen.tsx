@@ -82,12 +82,12 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ isActive }) => {
         <div className="flex flex-col items-center justify-center h-full">
             <p
                 ref={messageRef}
-                className="text-xl md:text-3xl text-orange-400 mb-8 h-20 flex items-center justify-center text-center"
+                className="text-xl md:text-3xl text-[#f9d447] mb-8 h-20 flex items-center justify-center text-center"
             ></p>
-            <div className="w-full max-w-lg border-2 border-orange-500 p-1">
+            <div className="w-full max-w-lg border-2 border-[#acdd9c] p-1">
                 <div
                     ref={barRef}
-                    className="h-8 bg-orange-500 origin-left"
+                    className="h-8 bg-[#76c0e3] origin-left"
                 ></div>
             </div>
         </div>

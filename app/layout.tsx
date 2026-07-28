@@ -49,15 +49,15 @@ export default function RootLayout({
             >
                 <NextTopLoader />
 
-                <HeaderServer />
+                {/* <HeaderServer /> */}
                 <main className="min-h-screen">
-                    <div className="h-16 bg-primary" />
+                    {/* <div className="h-16 bg-primary" /> */}
                     <Suspense>
                       {children}
                     </Suspense>
-                    <Toaster />
+                    {/* <Toaster /> */}
                 </main>
-                <Footer />
+                {/* <Footer /> */}
             </body>
         </html>
     );

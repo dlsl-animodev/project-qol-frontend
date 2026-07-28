@@ -26,12 +26,12 @@ const IdleScreen: React.FC<IdleScreenProps> = ({ isActive }) => {
 
     return (
         <div ref={containerRef} className="flex flex-col items-center justify-center h-full text-center">
-            <h1 className="text-4xl md:text-6xl mb-4 text-shadow-[0_0_10px_theme(colors.orange.500)]">
+            <h1 className="text-4xl md:text-6xl mb-4 text-[#f9d447] drop-shadow-[0_0_10px_rgba(249,212,71,0.65)]">
                 AWAITING INPUT
             </h1>
-            <p className="text-lg md:text-2xl text-orange-400">
+            <p className="text-lg md:text-2xl text-[#acdd9c]">
                 PLEASE TAP STUDENT ID CARD
-                <span ref={cursorRef} className="ml-2 w-4 h-8 bg-orange-500 inline-block align-middle"></span>
+                <span ref={cursorRef} className="ml-2 w-4 h-8 bg-[#f9d447] inline-block align-middle"></span>
             </p>
         </div>
     );

@@ -36,13 +36,13 @@ const DisplayScreen: React.FC<DisplayScreenProps> = ({ isActive, data }) => {
             <img
                 src="https://picsum.photos/seed/student/150/150"
                 alt="Student Avatar"
-                className="w-36 h-36 border-4 border-orange-500 rounded-full mb-6 shadow-[0_0_15px_theme(colors.orange.500)]"
+                className="w-36 h-36 border-4 border-[#acdd9c] rounded-full mb-6 shadow-[0_0_15px_rgba(172,221,156,0.7)]"
             />
-            <h2 className="text-3xl text-green-400 mb-2">ACCESS GRANTED</h2>
-            <h1 className="text-4xl md:text-6xl text-shadow-[0_0_10px_theme(colors.orange.500)]">
+            <h2 className="text-3xl text-[#acdd9c] mb-2">ACCESS GRANTED</h2>
+            <h1 className="text-4xl md:text-6xl text-[#f9d447] drop-shadow-[0_0_10px_rgba(249,212,71,0.65)]">
                 WELCOME,
             </h1>
-            <p className="text-4xl md:text-6xl text-orange-300 mt-2">{data ? getNameFromEmail(data.email_address) : 'Unknown User'}</p>
+            <p className="text-4xl md:text-6xl text-[#76c0e3] mt-2">{data ? getNameFromEmail(data.email_address) : 'Unknown User'}</p>
         </div>
     );
 };
